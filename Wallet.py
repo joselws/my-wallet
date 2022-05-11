@@ -10,14 +10,14 @@ class Wallet():
     cap (integer): Optional, None if not provided
     """
     
-    def __init__(self, name: str, percent: Union[int, None] = None, balance: int = 0, cap: Union[int, None] = None):
+    def __init__(self, name: str, balance: int = 0, percent: Union[int, None] = None, cap: Union[int, None] = None):
         self.name = name
         self.percent = percent
         self.balance = balance
         self.cap = cap
 
-    def __repr__(self):
-        return f"{self.name}: ${self.balance} ({self.percent}%)"
+    def __repr__(self) -> str:
+        return f"{self.name}: ${self.balance}"
 
     def __add__(self, value: int) -> Wallet:
         """ Sums the balance when the wallet is on addition operations """
