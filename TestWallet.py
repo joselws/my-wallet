@@ -31,19 +31,21 @@ class TestWallet(unittest.TestCase):
         """Test the __add__ method of this wallet"""
         test_wallet = Wallet('Test', 50)
         self.assertEqual(test_wallet.balance, 50)
-        test_wallet += 50
-        self.assertEqual(test_wallet.balance, 100)
         self.assertIsNone(test_wallet.percent)
         self.assertIsNone(test_wallet.cap)
+        
+        test_wallet += 50
+        self.assertEqual(test_wallet.balance, 100)
 
     def test_sub(self):
         """Test the __sub__ method of this wallet"""
         test_wallet = Wallet('Test', balance=50)
         self.assertEqual(test_wallet.balance, 50)
-        test_wallet -= 50
-        self.assertEqual(test_wallet.balance, 0)
         self.assertIsNone(test_wallet.percent)
         self.assertIsNone(test_wallet.cap)
+        
+        test_wallet -= 50
+        self.assertEqual(test_wallet.balance, 0)
 
 if __name__ == "__main__":
     unittest.main()
