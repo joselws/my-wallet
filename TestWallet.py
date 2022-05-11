@@ -22,6 +22,14 @@ class TestWallet(unittest.TestCase):
         self.assertEqual(emergencies.balance, 100)
         self.assertEqual(repr(emergencies), 'Emergencies: $100 (15%)')
 
+    def test_add(self):
+        """Test the __add__ method of this wallet"""
+        test_wallet = Wallet('Test', balance=50)
+        self.assertEqual(test_wallet.balance, 50)
+        test_wallet += 50
+        self.assertEqual(test_wallet.balance, 100)
+        self.assertIsNone(test_wallet.percent)
+        self.assertIsNone(test_wallet.cap)
 
 if __name__ == "__main__":
     unittest.main()
