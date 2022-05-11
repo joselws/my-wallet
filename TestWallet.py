@@ -31,5 +31,14 @@ class TestWallet(unittest.TestCase):
         self.assertIsNone(test_wallet.percent)
         self.assertIsNone(test_wallet.cap)
 
+    def test_sub(self):
+        """Test the __sub__ method of this wallet"""
+        test_wallet = Wallet('Test', balance=50)
+        self.assertEqual(test_wallet.balance, 50)
+        test_wallet -= 50
+        self.assertEqual(test_wallet.balance, 0)
+        self.assertIsNone(test_wallet.percent)
+        self.assertIsNone(test_wallet.cap)
+
 if __name__ == "__main__":
     unittest.main()

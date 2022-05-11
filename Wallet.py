@@ -1,4 +1,5 @@
-from typing import Union
+from __future__ import annotations
+from typing import Union, Type
 
 class Wallet():
     """
@@ -18,6 +19,12 @@ class Wallet():
     def __repr__(self):
         return f"{self.name}: ${self.balance} ({self.percent}%)"
 
-    def __add__(self, value):
+    def __add__(self, value: int) -> Wallet:
+        """ Sums the balance when the wallet is on addition operations """
         self.balance += value
+        return self
+    
+    def __sub__(self, value: int) -> Wallet:
+        """ Substracts the wallet balance from the value """
+        self.balance -= value
         return self
