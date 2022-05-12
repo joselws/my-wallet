@@ -1,6 +1,7 @@
 import json
 import os
 from Account import Account
+from Wallet import Wallet
 import unittest
 
 
@@ -45,6 +46,18 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.name, 'charity')
         with self.assertRaises(Exception):
             self.account.get_wallet('travels')
+
+    def test_add_wallet(self):
+        """Test the add wallet feature"""
+        new_wallet = Wallet('home', 150, 5, 2000)
+        self.account.add_wallet(new_wallet)
+        self.assertEqual(len(self.account.wallets), 4)
+
+        got_wallet = self.account.get_wallet('home')
+        self.assertEqual(got_wallet.name, 'home')
+        self.assertEqual(got_wallet.balance, 150)
+        self.assertEqual(got_wallet.percent, 5)
+        self.assertEqual(got_wallet.cap, 2000)
 
 
 if __name__ == '__main__':

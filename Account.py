@@ -58,3 +58,8 @@ class Account():
             if wallet_name == wallet.name:
                 return wallet
         raise Exception(f'Wallet {wallet_name} not found. Try again.')
+
+    def add_wallet(self, new_wallet: Wallet) -> None:
+        """Adds a new wallet to your wallets"""
+
+        self.wallets.append(new_wallet)
