@@ -15,8 +15,12 @@ class TestAccount(unittest.TestCase):
     
     def test_account_created(self):
         self.assertEqual(self.account.owner, 'Jose')
-        self.assertEqual(len(self.account.wallets), 3)
+        self.assertEqual(self.account.wallets, [])
 
+    def test_wallet_file_initialized(self):
+        with open(self.account.wallet_name) as file:
+            json_content = file.read()
+        self.assertEqual(json_content, '[]')
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ class Wallet():
         self.cap = cap
 
     def __repr__(self) -> str:
-        return f"{self.name}: ${self.balance}"
+        return f"Wallet: {self.name} (${self.balance})"
 
     def __add__(self, value: int) -> Wallet:
         """ Sums the balance when the wallet is on addition operations """

@@ -16,7 +16,7 @@ class TestWallet(unittest.TestCase):
         self.assertIsNone(base.cap)
         self.assertEqual(base.name, "Base")
         self.assertEqual(base.balance, 0)
-        self.assertEqual(repr(base), 'Base: $0')
+        self.assertEqual(repr(base), 'Wallet: Base ($0)')
 
     def test_wallet_all_values(self):
         """Provide all data to this wallet"""
@@ -25,7 +25,7 @@ class TestWallet(unittest.TestCase):
         self.assertEqual(emergencies.cap, 80000)
         self.assertEqual(emergencies.name, "Emergencies")
         self.assertEqual(emergencies.balance, 100)
-        self.assertEqual(repr(emergencies), 'Emergencies: $100')
+        self.assertEqual(repr(emergencies), 'Wallet: Emergencies ($100)')
 
     def test_add(self):
         """Test the __add__ method of this wallet"""

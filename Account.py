@@ -7,7 +7,7 @@ import os
 
 class Account():
     def __init__(self, owner: str):
-        self.wallet_name = "test_wallet.json"
+        self.wallet_name = "test_empty_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
@@ -16,8 +16,15 @@ class Account():
     
     def __init_wallets_file(self) -> None:
         """Makes sure to load the wallets file or create it if it doesn't exist"""
-        if os.path.exists(self.wallet_name):
-            pass
+        wallet_exists = os.path.exists(self.wallet_name)
+        
+        if wallet_exists:
+            with open(self.wallet_name) as file:
+                json_content = file.read()
+                wallets_dict = json.loads(json_content)
+        
         else:
             with open(self.wallet_name, 'w') as file:
-                pass
+                if not wallet_exists:
+                    file.write('[]')
+                    print('Wallet created')

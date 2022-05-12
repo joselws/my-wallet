@@ -1,0 +1,20 @@
+[
+    {
+      "name": "main",
+      "percent": 70,
+      "balance": 1500,
+      "cap": null
+    },
+    {
+      "name": "emergencies",
+      "percent": 20,
+      "balance": 500,
+      "cap": 50000
+    },
+    {
+      "name": "charity",
+      "percent": 10,
+      "balance": 200,
+      "cap": null
+    }
+]
