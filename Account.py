@@ -60,12 +60,22 @@ class Account():
         raise Exception(f'Wallet {wallet_name} not found. Try again.')
 
     def add_wallet(self, new_wallet: Wallet) -> None:
-        """Adds a new wallet to your wallets"""
+        """
+        Adds a new wallet to your wallets,
+        or raises an exception if the wallet name is repeated
+        """
 
-        self.wallets.append(new_wallet)
+        wallet_names = [wallet.name for wallet in self.wallets]
+        if new_wallet.name in wallet_names:
+            raise Exception(f'Wallet {new_wallet.name} already exists. Please try again.')
+        else:
+            self.wallets.append(new_wallet)
 
     def delete_wallet(self, name: str):
-        """Delete an existing wallet from your wallets"""
+        """
+        Delete an existing wallet from your wallets
+        or raises an exception if the wallet couldn't be found
+        """
     
         try:
             wallet_to_delete = self.get_wallet(name)
