@@ -21,10 +21,13 @@ class Account():
         if wallet_exists:
             with open(self.wallet_name) as file:
                 json_content = file.read()
-                wallets_dict = json.loads(json_content)
+                wallets: List = json.loads(json_content)
+
+            for wallet_dict in wallets:
+                wallet = Wallet(**wallet_dict)
+                self.wallets.append(wallet)
         
         else:
             with open(self.wallet_name, 'w') as file:
-                if not wallet_exists:
-                    file.write('[]')
-                    print('Wallet created')
+                file.write('[]')
+                print('Wallet created')

@@ -10,13 +10,10 @@ class TestAccount(unittest.TestCase):
         self.account = Account('Jose')
 
 
-    def test_json_file_exists(self):
+    def test_account_correctly_created(self):
         self.assertTrue(os.path.exists(self.account.wallet_name))
-    
-    def test_account_created(self):
         self.assertEqual(self.account.owner, 'Jose')
         self.assertEqual(len(self.account.wallets), 3)
-
 
 
 if __name__ == '__main__':
