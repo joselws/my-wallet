@@ -12,6 +12,9 @@ class TestAccount(unittest.TestCase):
 
     def setUp(self):
         self.account = Account('Jose')
+        self.main = self.account.get_wallet('main')
+        self.emergencies = self.account.get_wallet('emergencies')
+        self.charity = self.account.get_wallet('charity')
 
 
     def test_account_correctly_created(self):
@@ -22,13 +25,9 @@ class TestAccount(unittest.TestCase):
 
     def test_get_wallet(self):
         """Test the get_wallet method"""
-        main = self.account.get_wallet('main')
-        emergencies = self.account.get_wallet('emergencies')
-        charity = self.account.get_wallet('charity')
-        
-        self.assertEqual(main.name, 'main')
-        self.assertEqual(emergencies.name, 'emergencies')
-        self.assertEqual(charity.name, 'charity')
+        self.assertEqual(self.main.name, 'main')
+        self.assertEqual(self.emergencies.name, 'emergencies')
+        self.assertEqual(self.charity.name, 'charity')
         with self.assertRaises(Exception):
             self.account.get_wallet('travels')
 
