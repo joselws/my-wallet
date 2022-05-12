@@ -23,6 +23,21 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.account.owner, 'Jose')
         self.assertEqual(len(self.account.wallets), 3)
 
+        self.assertEqual(self.main.name, 'main')
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.main.percent, 70)
+        self.assertIsNone(self.main.cap)
+
+        self.assertEqual(self.emergencies.name, 'emergencies')
+        self.assertEqual(self.emergencies.balance, 500)
+        self.assertEqual(self.emergencies.percent, 20)
+        self.assertEqual(self.emergencies.cap, 50000)
+
+        self.assertEqual(self.charity.name, 'charity')
+        self.assertEqual(self.charity.balance, 200)
+        self.assertEqual(self.charity.percent, 10)
+        self.assertIsNone(self.charity.cap)
+
     def test_get_wallet(self):
         """Test the get_wallet method"""
         self.assertEqual(self.main.name, 'main')

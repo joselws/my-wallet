@@ -22,6 +22,13 @@ class TestAccount(unittest.TestCase):
             json_content = file.read()
         self.assertEqual(json_content, '[]')
 
+    def test_wallet_correctly_created(self):
+        os.remove(self.account.wallet_name)
+        self.assertFalse(os.path.exists(self.account.wallet_name))
+
+        new_acc = Account('new')
+        self.assertTrue(os.path.exists(self.account.wallet_name))
+
 
 if __name__ == '__main__':
     unittest.main()
