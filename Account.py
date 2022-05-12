@@ -63,3 +63,14 @@ class Account():
         """Adds a new wallet to your wallets"""
 
         self.wallets.append(new_wallet)
+
+    def delete_wallet(self, name: str):
+        """Delete an existing wallet from your wallets"""
+    
+        try:
+            wallet_to_delete = self.get_wallet(name)
+        except:
+            print(f'Wallet {name} could not be found. Please try again.')
+            raise
+        else:
+            self.wallets.remove(wallet_to_delete)

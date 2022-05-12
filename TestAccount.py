@@ -59,6 +59,13 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(got_wallet.percent, 5)
         self.assertEqual(got_wallet.cap, 2000)
 
+    def test_delete_wallet(self):
+        """Test the delete wallet feature"""
+        self.account.delete_wallet('charity')
+        self.assertEqual(len(self.account.wallets), 2)
+        with self.assertRaises(Exception):
+            self.account.delete_wallet('charity')
+
 
 if __name__ == '__main__':
     unittest.main()
