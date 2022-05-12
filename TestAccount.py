@@ -69,6 +69,33 @@ class TestAccount(unittest.TestCase):
         with self.assertRaises(Exception):
             self.account.delete_wallet('charity')
 
+    def test_correct_percent(self):
+        """Test the correct percent feature"""
+        self.assertTrue(self.account.correct_percent())
+
+        test_account = Account('test')
+        test_account.wallets.clear()
+        test_account.add_wallet(Wallet('new1', 100, 20))
+        test_account.add_wallet(Wallet('new2', 100))
+        test_account.add_wallet(Wallet('new3', 100))
+        test_account.add_wallet(Wallet('new4', 100, 50))
+
+        test_account2 = Account('test2')
+        test_account2.wallets.clear()
+        test_account2.add_wallet(Wallet('new5'))
+        test_account2.add_wallet(Wallet('new6'))
+        self.assertFalse(test_account2.correct_percent())
+
+    def test_valid_number(self):
+        """Tests for the valid_number method"""
+        self.assertTrue(self.account.valid_number(10))
+        self.assertFalse(self.account.valid_number(0))
+        self.assertFalse(self.account.valid_number('10'))
+        self.assertFalse(self.account.valid_number(4.3))
+        self.assertFalse(self.account.valid_number(-9))
+        self.assertFalse(self.account.valid_number(True))
+        self.assertFalse(self.account.valid_number(None))
+
 
 if __name__ == '__main__':
     unittest.main()

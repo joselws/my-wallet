@@ -32,9 +32,7 @@ class Account():
         Internal use only
         """
 
-        wallet_exists = os.path.exists(self.wallet_name)
-        
-        if wallet_exists:
+        if os.path.exists(self.wallet_name):
             with open(self.wallet_name) as file:
                 json_content = file.read()
                 wallets: List = json.loads(json_content)
@@ -84,3 +82,28 @@ class Account():
             raise
         else:
             self.wallets.remove(wallet_to_delete)
+
+    def correct_percent(self) -> bool:
+        """
+        Returns true if the sum of the percentages of all wallets is 100
+        Return false otherwise
+        """
+
+        percents = [wallet.percent for wallet in self.wallets if wallet.percent is not None]
+        if not percents:
+            return False
+        elif sum(percents) == 100:
+            return True
+        else:
+            return False
+
+    def valid_number(self, value) -> bool:
+        """
+        Returns true if the given number is a positive integer
+        Otherwise returns False
+        """
+
+        if type(value) is int and value > 0:
+            return True
+        else:
+            return False 
