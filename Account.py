@@ -6,8 +6,20 @@ import os
 
 
 class Account():
+    """
+    This single account entity provides the functionality for managing
+    all the wallets for an owner. 
+
+    Attrs:
+    wallet_name[str]: name of the json file that will store the owner's wallet data
+    owner[str]: name of the owner of the wallets
+    wallets[List[Wallet]]: list that contains all the owner's wallets
+
+    Methods:
+    """
+
     def __init__(self, owner: str):
-        self.wallet_name = "test_empty_wallet.json"
+        self.wallet_name = "test_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
@@ -15,7 +27,11 @@ class Account():
 
     
     def __init_wallets_file(self) -> None:
-        """Makes sure to load the wallets file or create it if it doesn't exist"""
+        """
+        Makes sure to load the wallets file or create it if it doesn't exist.
+        Internal use only
+        """
+
         wallet_exists = os.path.exists(self.wallet_name)
         
         if wallet_exists:
@@ -31,3 +47,14 @@ class Account():
             with open(self.wallet_name, 'w') as file:
                 file.write('[]')
                 print('Wallet created')
+
+    def get_wallet(self, wallet_name: str) -> Wallet:
+        """
+        Returns the wallet of the specified name,
+        or raises an exception if it is not found
+        """
+
+        for wallet in self.wallets:
+            if wallet_name == wallet.name:
+                return wallet
+        raise Exception(f'Wallet {wallet_name} not found. Try again.')
