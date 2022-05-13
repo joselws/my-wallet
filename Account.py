@@ -107,3 +107,35 @@ class Account():
             return True
         else:
             return False 
+
+    def transfer(self, _from: str, to: str, amount: int) -> None:
+        """
+        Transfer a desired amount of money from one wallet to another
+        Non-valid numbers and money that surpasses a wallet amount
+        raise exceptions
+        """
+
+        try:
+            from_wallet = self.get_wallet(_from)
+            to_wallet = self.get_wallet(to)
+        except:
+            print('Please insert valid wallet names.')
+            raise
+
+        if not self.valid_number(amount):
+            raise ValueError('Only positive integers are permitted. Try again.')
+
+        if amount > from_wallet.balance:
+            raise Exception('Money to transfer surpasses wallet amount. Please try again.')
+
+        from_wallet -= amount
+        to_wallet += amount
+
+    def total(self) -> str:
+        """
+        Outputs the total amount of money available
+        i.e. the sum of the balance of all wallets
+        """
+
+        total = sum([wallet.balance for wallet in self.wallets])
+        return f'${total}'

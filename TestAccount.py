@@ -96,6 +96,21 @@ class TestAccount(unittest.TestCase):
         self.assertFalse(self.account.valid_number(True))
         self.assertFalse(self.account.valid_number(None))
 
+    def test_transfer(self):
+        """Tests for the transfer feature"""
+        self.account.transfer('main', 'emergencies', 500)
+        self.assertEqual(self.main.balance, 1000)
+        self.assertEqual(self.emergencies.balance, 1000)
+
+        with self.assertRaises(Exception):
+            self.account.transfer('charity', 'emergencies', 300)
+
+        with self.assertRaises(ValueError):
+            self.account.transfer('main', 'charity', -50)
+
+    def test_total(self):
+        """Test Total method"""
+        self.assertEqual(self.account.total(), '$2200')
 
 if __name__ == '__main__':
     unittest.main()

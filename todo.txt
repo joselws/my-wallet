@@ -1,0 +1,5 @@
+set_percentages
+add base wallet
+deposit
+check wallets
+distribute
