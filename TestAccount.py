@@ -113,6 +113,12 @@ class TestAccount(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.account.transfer('main', 'charity', -50)
 
+    def test_transfer_none_amount(self):
+        """Test transfer method transfering all money when amount is None"""
+        self.account.transfer('charity', 'emergencies')
+        self.assertEqual(self.charity.balance, 0)
+        self.assertEqual(self.emergencies.balance, 700)
+
     def test_total(self):
         """Test Total method"""
         self.assertEqual(self.account.total(), '$2200')
@@ -134,6 +140,8 @@ class TestAccount(unittest.TestCase):
 
         # delete new wallet and save to json file
         account.delete_wallet('test')
+        main = account.get_wallet('main')
+        main -= 10
         account.save()
 
         # read json file and confirm new wallet was deleted
@@ -141,6 +149,20 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(len(account.wallets), 3)
         with self.assertRaises(Exception):
             test = account.get_wallet('test')
+
+    def test_deduct(self):
+        """Deduct method correctly working"""
+        self.account.deduct('main', 500)
+        self.assertEqual(self.main.balance, 1000)
+
+        with self.assertRaises(Exception):
+            self.account.deduct('charity', 1000)
+
+        with self.assertRaises(Exception):
+            self.account.deduct('no_wallet', 200)
+
+        self.account.deduct('emergencies')
+        self.assertEqual(self.emergencies.balance, 0)
 
 if __name__ == '__main__':
     unittest.main()

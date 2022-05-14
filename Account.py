@@ -19,7 +19,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.wallet_name = "test_empty_wallet.json"
+        self.wallet_name = "test_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
@@ -85,6 +85,7 @@ class Account():
             print(f'Wallet {name} could not be found. Please try again.')
             raise
         else:
+            self.transfer(name, 'main')
             self.wallets.remove(wallet_to_delete)
 
     def correct_percent(self) -> bool:
@@ -112,7 +113,7 @@ class Account():
         else:
             return False 
 
-    def transfer(self, _from: str, to: str, amount: int) -> None:
+    def transfer(self, _from: str, to: str, amount: int = None) -> None:
         """
         Transfer a desired amount of money from one wallet to another
         Non-valid numbers and money that surpasses a wallet amount
@@ -126,14 +127,19 @@ class Account():
             print('Please insert valid wallet names.')
             raise
 
-        if not self.valid_number(amount):
-            raise ValueError('Only positive integers are permitted. Try again.')
-
-        if amount > from_wallet.balance:
-            raise Exception('Money to transfer surpasses wallet amount. Please try again.')
-
-        from_wallet -= amount
-        to_wallet += amount
+        if amount is not None:
+            if not self.valid_number(amount):
+                raise ValueError('Only positive integers are permitted. Try again.')
+            if amount > from_wallet.balance:
+                raise Exception('Money to transfer surpasses wallet amount. Please try again.')
+            from_wallet -= amount
+            to_wallet += amount
+        
+        # Transfer all the money if amount is None
+        else:
+            amount = from_wallet.balance
+            from_wallet -= amount
+            to_wallet += amount
 
     def total(self) -> str:
         """
@@ -151,3 +157,23 @@ class Account():
         with open(self.wallet_name, 'w') as file:
             file.write(wallets_json)
             print('Saved Changes')
+
+    def deduct(self, wallet_name: str, amount: int = None):
+        """
+        Deduct the desired amount from the wallet
+        """
+
+        try:
+            wallet = self.get_wallet(wallet_name)
+        except:
+            print('No wallet under that name could be found.')
+            raise
+        else:
+            if amount is not None:
+                if amount > wallet.balance:
+                    raise Exception('Error: amount greater than wallet balance.')
+                else:
+                    wallet.balance -= amount
+            
+            else:
+                wallet.balance = 0
