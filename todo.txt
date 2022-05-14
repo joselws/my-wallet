@@ -1,3 +1,5 @@
-check wallets
+cap feature
+set caps
 distribute
 repr
+add wallet str

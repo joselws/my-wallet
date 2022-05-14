@@ -35,17 +35,21 @@ class Account():
         if os.path.exists(self.wallet_name):
             with open(self.wallet_name) as file:
                 json_content = file.read()
-                wallets: List = json.loads(json_content)
-
-            for wallet_dict in wallets:
-                wallet = Wallet(**wallet_dict)
-                self.wallets.append(wallet)
+                if not len(json_content):
+                    self.add_wallet(Wallet('main'))
+                    self.save()
+                    print('Wallet created.')
+                else:
+                    wallets: List = json.loads(json_content)
+                    for wallet_dict in wallets:
+                        wallet = Wallet(**wallet_dict)
+                        self.wallets.append(wallet)
         
         else:
             self.add_wallet(Wallet('main'))
             with open(self.wallet_name, 'w') as file:
                 self.save()
-                print('Wallet created')
+                print('Wallet created.')
 
     def get_wallet(self, wallet_name: str) -> Wallet:
         """
@@ -77,7 +81,7 @@ class Account():
         """
 
         if name == 'main':
-            raise Exception('Main wallet should not be deleted')
+            raise Exception('Main wallet should not be deleted.')
 
         try:
             wallet_to_delete = self.get_wallet(name)
@@ -156,7 +160,7 @@ class Account():
         wallets_json = json.dumps(wallets)
         with open(self.wallet_name, 'w') as file:
             file.write(wallets_json)
-            print('Saved Changes')
+            print('Saved Changes.')
 
     def deduct(self, wallet_name: str, amount: int = None):
         """
@@ -177,7 +181,7 @@ class Account():
             else:
                 wallet.balance = 0
 
-    def set_percentagees(self) -> None:
+    def set_percentages(self) -> None:
         """Show current wallets percents and prompts user to set them"""
 
         print("Showing current wallet percentages")
@@ -219,5 +223,14 @@ class Account():
 
         # transfer the remaining amount of money to main
         main = self.get_wallet('main')
-        print(f'Depositing {amount} to main')
+        print(f'Depositing {amount} to main\n')
         main += amount
+
+    def check_wallets(self) -> None:
+        """Show all information of all wallets"""
+        
+        for wallet in self.wallets:
+            print(f'Name: {wallet.name}')
+            print(f'Balance: ${wallet.balance}')
+            print(f'Percent: {wallet.percent}%')
+            print(f'Cap: ${wallet.cap}\n')

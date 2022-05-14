@@ -10,7 +10,7 @@ class Wallet():
     cap (integer): Optional, None if not provided
     """
     
-    def __init__(self, name: str, balance: int = 0, percent: Union[int, None] = None, cap: Union[int, None] = None):
+    def __init__(self, name: str, balance: int = 0, percent: Union[int, None] = 0, cap: Union[int, None] = 0):
         self.name = name
         self.percent = percent
         self.balance = balance
