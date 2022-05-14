@@ -139,3 +139,11 @@ class Account():
 
         total = sum([wallet.balance for wallet in self.wallets])
         return f'${total}'
+
+    def save(self) -> None:
+        """Save changes to json wallet file"""
+        wallets: List = [wallet.__dict__ for wallet in self.wallets]
+        wallets_json = json.dumps(wallets)
+        with open(self.wallet_name, 'w') as file:
+            file.write(wallets_json)
+            print('Saved Changes')

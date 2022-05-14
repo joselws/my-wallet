@@ -27,7 +27,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.main.name, 'main')
         self.assertEqual(self.main.balance, 1500)
         self.assertEqual(self.main.percent, 70)
-        self.assertIsNone(self.main.cap)
+        self.assertFalse(self.main.cap)
 
         self.assertEqual(self.emergencies.name, 'emergencies')
         self.assertEqual(self.emergencies.balance, 500)
@@ -37,7 +37,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.name, 'charity')
         self.assertEqual(self.charity.balance, 200)
         self.assertEqual(self.charity.percent, 10)
-        self.assertIsNone(self.charity.cap)
+        self.assertFalse(self.charity.cap)
 
     def test_get_wallet(self):
         """Test the get_wallet method"""
@@ -111,6 +111,31 @@ class TestAccount(unittest.TestCase):
     def test_total(self):
         """Test Total method"""
         self.assertEqual(self.account.total(), '$2200')
+
+    def test_save(self):
+        """Save method correctly saves changes into JSON file"""
+        # Save a new wallet to json file
+        self.account.add_wallet(Wallet('test', 10, 10, 10))
+        self.account.save()
+
+        # read json file and confirm new wallet values
+        account = Account('Jose')
+        test = account.get_wallet('test')
+        self.assertEqual(len(account.wallets), 4)
+        self.assertEqual(test.name, 'test')
+        self.assertEqual(test.balance, 10)
+        self.assertEqual(test.percent, 10)
+        self.assertEqual(test.cap, 10)
+
+        # delete new wallet and save to json file
+        account.delete_wallet('test')
+        account.save()
+
+        # read json file and confirm new wallet was deleted
+        account = Account('Jose')
+        self.assertEqual(len(account.wallets), 3)
+        with self.assertRaises(Exception):
+            test = account.get_wallet('test')
 
 if __name__ == '__main__':
     unittest.main()
