@@ -69,6 +69,11 @@ class TestAccount(unittest.TestCase):
         with self.assertRaises(Exception):
             self.account.delete_wallet('charity')
 
+    def test_cant_delete_main(self):
+        """Main wallet is not allowed to be deleted"""
+        with self.assertRaises(Exception):
+            self.account.delete_wallet('main')
+
     def test_correct_percent(self):
         """Test the correct percent feature"""
         self.assertTrue(self.account.correct_percent())

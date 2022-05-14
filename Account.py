@@ -19,7 +19,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.wallet_name = "test_wallet.json"
+        self.wallet_name = "test_empty_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
@@ -42,8 +42,9 @@ class Account():
                 self.wallets.append(wallet)
         
         else:
+            self.add_wallet(Wallet('main'))
             with open(self.wallet_name, 'w') as file:
-                file.write('[]')
+                self.save()
                 print('Wallet created')
 
     def get_wallet(self, wallet_name: str) -> Wallet:
@@ -74,7 +75,10 @@ class Account():
         Delete an existing wallet from your wallets
         or raises an exception if the wallet couldn't be found
         """
-    
+
+        if name == 'main':
+            raise Exception('Main wallet should not be deleted')
+
         try:
             wallet_to_delete = self.get_wallet(name)
         except:

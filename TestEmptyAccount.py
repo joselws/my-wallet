@@ -2,6 +2,7 @@ import json
 import os
 from Account import Account
 import unittest
+from Wallet import Wallet
 
 
 class TestAccount(unittest.TestCase):
@@ -15,12 +16,17 @@ class TestAccount(unittest.TestCase):
     
     def test_account_created(self):
         self.assertEqual(self.account.owner, 'Jose')
-        self.assertEqual(self.account.wallets, [])
+        self.assertEqual(len(self.account.wallets), 1)
 
     def test_wallet_file_initialized(self):
         with open(self.account.wallet_name) as file:
             json_content = file.read()
-        self.assertEqual(json_content, '[]')
+        wallets = json.loads(json_content)
+        main = Wallet(**wallets[0])
+        self.assertEqual(main.name, 'main')
+        self.assertFalse(main.percent)
+        self.assertFalse(main.balance)
+        self.assertFalse(main.cap)
 
     def test_wallet_correctly_created(self):
         os.remove(self.account.wallet_name)
