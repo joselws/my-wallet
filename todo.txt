@@ -1,6 +1,3 @@
-deduct
-set_percentages
-deposit
 check wallets
 distribute
 repr

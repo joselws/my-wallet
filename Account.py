@@ -174,6 +174,50 @@ class Account():
                     raise Exception('Error: amount greater than wallet balance.')
                 else:
                     wallet.balance -= amount
-            
             else:
                 wallet.balance = 0
+
+    def set_percentagees(self) -> None:
+        """Show current wallets percents and prompts user to set them"""
+
+        print("Showing current wallet percentages")
+        for wallet in self.wallets:
+            print(f'Wallet {wallet.name} {wallet.percent}%')
+
+        for wallet in self.wallets:
+            new_percent = input(f'Set percent of Wallet {wallet.name}: ')
+            try:
+                new_percent = int(new_percent)
+            except ValueError:
+                print('Not valid number format, please try again.')
+                raise
+            else:
+                if self.valid_number(new_percent) and new_percent <= 100 :
+                    wallet.percent = new_percent
+                else:
+                    raise Exception('Not a valid number format, please try again.')
+    
+    def deposit(self, amount: int) -> None:
+        """Deposit money and distribute it among all wallets"""
+
+        if not self.valid_number(amount):
+            raise ValueError('Not a valid number format.')
+        
+        # calculate the respective amount of money to all wallets except main
+        wallets_part = {}
+        for wallet in self.wallets:
+            if wallet.name != 'main':
+                part = (amount * wallet.percent) // 100
+                wallets_part[wallet.name] = part
+
+        # transfer the calculated money to each wallet
+        for name, part_money in wallets_part.items():
+            wallet = self.get_wallet(name)
+            print(f'Depositing {part_money} to {name}')
+            wallet.balance += part_money
+            amount -= part_money
+
+        # transfer the remaining amount of money to main
+        main = self.get_wallet('main')
+        print(f'Depositing {amount} to main')
+        main += amount

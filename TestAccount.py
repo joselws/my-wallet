@@ -164,5 +164,15 @@ class TestAccount(unittest.TestCase):
         self.account.deduct('emergencies')
         self.assertEqual(self.emergencies.balance, 0)
 
+    def test_deposit(self):
+        """Deposit feature works correctly"""
+        self.account.deposit(1000)
+        self.assertEqual(self.main.balance, 2200)
+        self.assertEqual(self.emergencies.balance, 700)
+        self.assertEqual(self.charity.balance, 300)
+
+        with self.assertRaises(ValueError):
+            self.account.deposit('twenty bucks')
+
 if __name__ == '__main__':
     unittest.main()
