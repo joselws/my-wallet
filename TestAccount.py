@@ -127,6 +127,8 @@ class TestAccount(unittest.TestCase):
     def test_total(self):
         """Test Total method"""
         self.assertEqual(self.account.total(), '$2200')
+        self.account.deposit(800)
+        self.assertEqual(self.account.total(), '$3000')
 
     def test_save(self):
         """Save method correctly saves changes into JSON file"""
@@ -190,6 +192,10 @@ class TestAccount(unittest.TestCase):
             self.account.add('no wallet', 20)
         with self.assertRaises(Exception):
             self.account.add('main', 'hi')
+
+    def test_repr(self):
+        """Repr method correctly working"""
+        self.assertEqual(repr(self.account), 'Account: Jose')
 
 if __name__ == '__main__':
     unittest.main()

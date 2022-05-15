@@ -251,3 +251,6 @@ class Account():
                 wallet += amount
             else:
                 raise Exception('Not a valid number format.')
+
+    def __repr__(self) -> str:
+        return f'Account: {self.owner}'
