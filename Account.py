@@ -36,7 +36,7 @@ class Account():
             with open(self.wallet_name) as file:
                 json_content = file.read()
                 if not len(json_content):
-                    self.add_wallet(Wallet('main'))
+                    self.add_wallet('main')
                     self.save()
                     print('Wallet created.')
                 else:
@@ -46,7 +46,7 @@ class Account():
                         self.wallets.append(wallet)
         
         else:
-            self.add_wallet(Wallet('main'))
+            self.add_wallet('main')
             with open(self.wallet_name, 'w') as file:
                 self.save()
                 print('Wallet created.')
@@ -62,17 +62,20 @@ class Account():
                 return wallet
         raise Exception(f'Wallet {wallet_name} not found. Try again.')
 
-    def add_wallet(self, new_wallet: Wallet) -> None:
+    def add_wallet(self, name: str, balance: int = 0, percent: int = 0, cap: int = 0) -> None:
         """
         Adds a new wallet to your wallets,
         or raises an exception if the wallet name is repeated
         """
 
         wallet_names = [wallet.name for wallet in self.wallets]
-        if new_wallet.name in wallet_names:
-            raise Exception(f'Wallet {new_wallet.name} already exists. Please try again.')
+        if name in wallet_names:
+            raise Exception(f'Wallet {name} already exists. Please try again.')
         else:
-            self.wallets.append(new_wallet)
+            if self.valid_number(balance) and self.valid_number(percent) and self.valid_number(cap):
+                self.wallets.append(Wallet(name, balance, percent, cap))
+            else:
+                raise Exception(f'Bad input, please try again.')
 
     def delete_wallet(self, name: str):
         """
@@ -112,7 +115,7 @@ class Account():
         Otherwise returns False
         """
 
-        if type(value) is int and value > 0:
+        if type(value) is int and value >= 0:
             return True
         else:
             return False 
@@ -174,8 +177,8 @@ class Account():
             raise
         else:
             if amount is not None:
-                if amount > wallet.balance:
-                    raise Exception('Error: amount greater than wallet balance.')
+                if amount > wallet.balance or not self.valid_number(amount):
+                    raise Exception('Error with the amount input, please try again.')
                 else:
                     wallet.balance -= amount
             else:
@@ -234,3 +237,17 @@ class Account():
             print(f'Balance: ${wallet.balance}')
             print(f'Percent: {wallet.percent}%')
             print(f'Cap: ${wallet.cap}\n')
+
+    def add(self, name: str, amount: int) -> None:
+        """Add an amount of money to a wallet"""
+        
+        try:
+            wallet = self.get_wallet(name)
+        except:
+            print(f'Wallet {name} could not be found.')
+            raise
+        else:
+            if self.valid_number(amount):
+                wallet += amount
+            else:
+                raise Exception('Not a valid number format.')

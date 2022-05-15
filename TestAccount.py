@@ -49,18 +49,23 @@ class TestAccount(unittest.TestCase):
 
     def test_add_wallet(self):
         """Test the add wallet feature"""
-        new_wallet = Wallet('home', 150, 5, 2000)
-        self.account.add_wallet(new_wallet)
+        self.account.add_wallet('home', 150, 5, 2000)
+        new_wallet = self.account.get_wallet('home')
         self.assertEqual(len(self.account.wallets), 4)
-
-        got_wallet = self.account.get_wallet('home')
-        self.assertEqual(got_wallet.name, 'home')
-        self.assertEqual(got_wallet.balance, 150)
-        self.assertEqual(got_wallet.percent, 5)
-        self.assertEqual(got_wallet.cap, 2000)
+        self.assertEqual(new_wallet.name, 'home')
+        self.assertEqual(new_wallet.balance, 150)
+        self.assertEqual(new_wallet.percent, 5)
+        self.assertEqual(new_wallet.cap, 2000)
 
         with self.assertRaises(Exception):
-            self.account.add_wallet(Wallet('home'))
+            self.account.add_wallet('home')
+
+        with self.assertRaises(Exception):
+            self.account.add_wallet('test', 'hi')
+        with self.assertRaises(Exception):
+            self.account.add_wallet('test2', 200, 'hi')
+        with self.assertRaises(Exception):
+            self.account.add_wallet('test', 300, 10, 'hi')
 
     def test_delete_wallet(self):
         """Test the delete wallet feature"""
@@ -80,21 +85,21 @@ class TestAccount(unittest.TestCase):
 
         test_account = Account('test')
         test_account.wallets.clear()
-        test_account.add_wallet(Wallet('new1', 100, 20))
-        test_account.add_wallet(Wallet('new2', 100))
-        test_account.add_wallet(Wallet('new3', 100))
-        test_account.add_wallet(Wallet('new4', 100, 50))
+        test_account.add_wallet('new1', 100, 20)
+        test_account.add_wallet('new2', 100)
+        test_account.add_wallet('new3', 100)
+        test_account.add_wallet('new4', 100, 50)
 
         test_account2 = Account('test2')
         test_account2.wallets.clear()
-        test_account2.add_wallet(Wallet('new5'))
-        test_account2.add_wallet(Wallet('new6'))
+        test_account2.add_wallet('new5')
+        test_account2.add_wallet('new6')
         self.assertFalse(test_account2.correct_percent())
 
     def test_valid_number(self):
         """Tests for the valid_number method"""
         self.assertTrue(self.account.valid_number(10))
-        self.assertFalse(self.account.valid_number(0))
+        self.assertTrue(self.account.valid_number(0))
         self.assertFalse(self.account.valid_number('10'))
         self.assertFalse(self.account.valid_number(4.3))
         self.assertFalse(self.account.valid_number(-9))
@@ -126,7 +131,7 @@ class TestAccount(unittest.TestCase):
     def test_save(self):
         """Save method correctly saves changes into JSON file"""
         # Save a new wallet to json file
-        self.account.add_wallet(Wallet('test', 10, 10, 10))
+        self.account.add_wallet('test', 10, 10, 10)
         self.account.save()
 
         # read json file and confirm new wallet values
@@ -161,6 +166,9 @@ class TestAccount(unittest.TestCase):
         with self.assertRaises(Exception):
             self.account.deduct('no_wallet', 200)
 
+        with self.assertRaises(Exception):
+            self.account.deduct('charity', 'hi')
+
         self.account.deduct('emergencies')
         self.assertEqual(self.emergencies.balance, 0)
 
@@ -173,6 +181,15 @@ class TestAccount(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.account.deposit('twenty bucks')
+
+    def test_add(self):
+        """Add to wallet feature works correctly"""
+        self.account.add('main', 500)
+        self.assertEqual(self.main.balance, 2000)
+        with self.assertRaises(Exception):
+            self.account.add('no wallet', 20)
+        with self.assertRaises(Exception):
+            self.account.add('main', 'hi')
 
 if __name__ == '__main__':
     unittest.main()

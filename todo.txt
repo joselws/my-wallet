@@ -2,4 +2,5 @@ cap feature
 set caps
 distribute
 repr
+add to wallet
 add wallet str
