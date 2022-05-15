@@ -209,6 +209,9 @@ class Account():
 
         if not self.valid_number(amount):
             raise ValueError('Not a valid number format.')
+
+        if not self.correct_percent():
+            raise Exception('Percent values among wallets do not add up to 100, please set them and try again.')
         
         # calculate the respective amount of money to all wallets except main
         wallets_part = {}

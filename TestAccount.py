@@ -184,6 +184,10 @@ class TestAccount(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.account.deposit('twenty bucks')
 
+        self.account.add_wallet('test', 20, 20)
+        with self.assertRaises(Exception):
+            self.account.deposit(500)
+
     def test_add(self):
         """Add to wallet feature works correctly"""
         self.account.add('main', 500)
