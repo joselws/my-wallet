@@ -201,5 +201,9 @@ class TestAccount(unittest.TestCase):
         """Repr method correctly working"""
         self.assertEqual(repr(self.account), 'Account: Jose')
 
+    def test_len(self):
+        """Len function returns the amount of wallets"""
+        self.assertEqual(len(self.account), 3)
+
 if __name__ == '__main__':
     unittest.main()

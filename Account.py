@@ -257,3 +257,6 @@ class Account():
 
     def __repr__(self) -> str:
         return f'Account: {self.owner}'
+
+    def __len__(self) -> int:
+        return len(self.wallets)

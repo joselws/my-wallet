@@ -2,3 +2,4 @@ cap feature
 set caps
 readme
 help
+document the project
