@@ -8,14 +8,46 @@ import os
 class Account():
     """
     This single account entity provides the functionality for managing
-    all the wallets for an owner. 
+    all the wallets for an owner.
+
+    initialize your account by just doing:
+    owner_name = Account('owner_name')
+
 
     Attrs:
-    wallet_name[str]: name of the json file that will store the owner's wallet data
-    owner[str]: name of the owner of the wallets
-    wallets[List[Wallet]]: list that contains all the owner's wallets
+    -----
+    wallet_name[str]: name of the json file that will store the owner's wallet data,
+        change it if you need to point to a different file location in relation to your
+        current folder
+    owner[str]: name of the owner of the wallets. Mandatory attribute
+    wallets[List[Wallet]]: list that contains all the owner's wallets. It's read from the json file
+        tip: use your_account.wallets to get a list of all your current wallets with their balances
+
 
     Methods:
+    -----
+    add_wallet(name: str, balance: int, percent: int, cap: int): add a new wallet to your account
+
+    delete_wallet(name: str): delete an existing wallet
+
+    transfer(from: name, to: name, amount: int): transfer an amount of money from a wallet to another
+
+    deposit(amount: int): deposit a given amount of money distributes over your wallets according to
+    
+    total() -> str: Returns the total balance of all your wallets
+    
+    add(name: str, amount: int): add a given amount of money to a specific wallet
+    
+    deduct(name:str, amount: int): Substract a given amount to a wallet
+    
+    set_percentages(): Prompts the user to input the percent attribute of all his wallets
+        their percentages
+    
+    correct_percent() -> bool: Returns true if the percent attribute of all your wallets add up to 100
+    
+    check_wallets(): displays complete information of all your wallets
+    
+    save(): save your changes to your json file
     """
 
     def __init__(self, owner: str):
@@ -53,7 +85,7 @@ class Account():
 
     def get_wallet(self, wallet_name: str) -> Wallet:
         """
-        Returns the wallet of the specified name,
+        Returns a wallet object of the specified name,
         or raises an exception if it is not found
         """
 
