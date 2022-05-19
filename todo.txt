@@ -1,3 +1,6 @@
+don't raise exceptions
+    - total and bottom
+separate test cases
 cap feature
 set caps
 readme

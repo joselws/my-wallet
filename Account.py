@@ -92,7 +92,7 @@ class Account():
         for wallet in self.wallets:
             if wallet_name == wallet.name:
                 return wallet
-        raise Exception(f'Wallet {wallet_name} not found. Try again.')
+        print(f'Wallet {wallet_name} not found. Try again.')
 
     def add_wallet(self, name: str, balance: int = 0, percent: int = 0, cap: int = 0) -> None:
         """
@@ -102,12 +102,13 @@ class Account():
 
         wallet_names = [wallet.name for wallet in self.wallets]
         if name in wallet_names:
-            raise Exception(f'Wallet {name} already exists. Please try again.')
+            print(f'Wallet {name} already exists. Please try again.')
+            return
         else:
             if self.valid_number(balance) and self.valid_number(percent) and self.valid_number(cap):
                 self.wallets.append(Wallet(name, balance, percent, cap))
             else:
-                raise Exception(f'Bad input, please try again.')
+                print(f'Bad input, please try again.')
 
     def delete_wallet(self, name: str):
         """
@@ -116,13 +117,12 @@ class Account():
         """
 
         if name == 'main':
-            raise Exception('Main wallet should not be deleted.')
+            print('Main wallet should not be deleted.')
+            return
 
-        try:
-            wallet_to_delete = self.get_wallet(name)
-        except:
+        wallet_to_delete = self.get_wallet(name)
+        if not wallet_to_delete:
             print(f'Wallet {name} could not be found. Please try again.')
-            raise
         else:
             self.transfer(name, 'main')
             self.wallets.remove(wallet_to_delete)
@@ -159,18 +159,19 @@ class Account():
         raise exceptions
         """
 
-        try:
-            from_wallet = self.get_wallet(_from)
-            to_wallet = self.get_wallet(to)
-        except:
+        from_wallet = self.get_wallet(_from)
+        to_wallet = self.get_wallet(to)
+        if not from_wallet or not to_wallet:
             print('Please insert valid wallet names.')
-            raise
+            return
 
         if amount is not None:
             if not self.valid_number(amount):
-                raise ValueError('Only positive integers are permitted. Try again.')
+                print('Only positive integers are permitted. Try again.')
+                return
             if amount > from_wallet.balance:
-                raise Exception('Money to transfer surpasses wallet amount. Please try again.')
+                print('Money to transfer surpasses wallet amount. Please try again.')
+                return
             from_wallet -= amount
             to_wallet += amount
         
@@ -202,15 +203,14 @@ class Account():
         Deduct the desired amount from the wallet
         """
 
-        try:
-            wallet = self.get_wallet(wallet_name)
-        except:
+        wallet = self.get_wallet(wallet_name)
+        if not wallet:
             print('No wallet under that name could be found.')
-            raise
+            return
         else:
             if amount is not None:
-                if amount > wallet.balance or not self.valid_number(amount):
-                    raise Exception('Error with the amount input, please try again.')
+                if not self.valid_number(amount) or amount > wallet.balance:
+                    print('Error with the amount input, please try again.')
                 else:
                     wallet.balance -= amount
             else:
@@ -221,7 +221,7 @@ class Account():
 
         print("Showing current wallet percentages")
         for wallet in self.wallets:
-            print(f'Wallet {wallet.name} {wallet.percent}%')
+            print(f'Wallet {wallet.name}: {wallet.percent}%')
 
         for wallet in self.wallets:
             new_percent = input(f'Set percent of Wallet {wallet.name}: ')
@@ -229,21 +229,23 @@ class Account():
                 new_percent = int(new_percent)
             except ValueError:
                 print('Not valid number format, please try again.')
-                raise
+                return
             else:
                 if self.valid_number(new_percent) and new_percent <= 100 :
                     wallet.percent = new_percent
                 else:
-                    raise Exception('Not a valid number format, please try again.')
+                    print('Not a valid number format, please try again.')
     
     def deposit(self, amount: int) -> None:
         """Deposit money and distribute it among all wallets"""
 
         if not self.valid_number(amount):
-            raise ValueError('Not a valid number format.')
+            print('Not a valid number format.')
+            return
 
         if not self.correct_percent():
-            raise Exception('Percent values among wallets do not add up to 100, please set them and try again.')
+            print('Percent values among wallets do not add up to 100, please set them and try again.')
+            return
         
         # calculate the respective amount of money to all wallets except main
         wallets_part = {}
@@ -276,16 +278,15 @@ class Account():
     def add(self, name: str, amount: int) -> None:
         """Add an amount of money to a wallet"""
         
-        try:
-            wallet = self.get_wallet(name)
-        except:
+        wallet = self.get_wallet(name)
+        if not wallet:
             print(f'Wallet {name} could not be found.')
-            raise
+            return
         else:
             if self.valid_number(amount):
                 wallet += amount
             else:
-                raise Exception('Not a valid number format.')
+                print('Not a valid number format.')
 
     def __repr__(self) -> str:
         return f'Account: {self.owner}'
