@@ -8,50 +8,11 @@ import os
 class Account():
     """
     This single account entity provides the functionality for managing
-    all the wallets for an owner.
-
-    initialize your account by just doing:
-    owner_name = Account('owner_name')
-
-
-    Attrs:
-    -----
-    wallet_name[str]: name of the json file that will store the owner's wallet data,
-        change it if you need to point to a different file location in relation to your
-        current folder
-    owner[str]: name of the owner of the wallets. Mandatory attribute
-    wallets[List[Wallet]]: list that contains all the owner's wallets. It's read from the json file
-        tip: use your_account.wallets to get a list of all your current wallets with their balances
-
-
-    Methods:
-    -----
-    add_wallet(name: str, balance: int, percent: int, cap: int): add a new wallet to your account
-
-    delete_wallet(name: str): delete an existing wallet
-
-    transfer(from: name, to: name, amount: int): transfer an amount of money from a wallet to another
-
-    deposit(amount: int): deposit a given amount of money distributes over your wallets according to
-    
-    total() -> str: Returns the total balance of all your wallets
-    
-    add(name: str, amount: int): add a given amount of money to a specific wallet
-    
-    deduct(name:str, amount: int): Substract a given amount to a wallet
-    
-    set_percentages(): Prompts the user to input the percent attribute of all his wallets
-        their percentages
-    
-    correct_percent() -> bool: Returns true if the percent attribute of all your wallets add up to 100
-    
-    check_wallets(): displays complete information of all your wallets
-    
-    save(): save your changes to your json file
+    all the wallets for an owner. 
     """
 
     def __init__(self, owner: str):
-        self.wallet_name = "test_wallet.json"
+        self.wallet_name = "my_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
@@ -83,21 +44,22 @@ class Account():
                 self.save()
                 print('Wallet created.')
 
-    def get_wallet(self, wallet_name: str) -> Wallet:
+    def get_wallet(self, name: str) -> Wallet:
         """
-        Returns a wallet object of the specified name,
-        or raises an exception if it is not found
+        Returns an existing wallet object of the specified name
         """
 
         for wallet in self.wallets:
-            if wallet_name == wallet.name:
+            if name == wallet.name:
                 return wallet
-        print(f'Wallet {wallet_name} not found. Try again.')
+        print(f'Wallet {name} not found. Try again.')
 
     def add_wallet(self, name: str, balance: int = 0, percent: int = 0, cap: int = 0) -> None:
         """
-        Adds a new wallet to your wallets,
-        or raises an exception if the wallet name is repeated
+        Adds a new wallet to your wallets provided a name
+        balance (optional) is the current amount of money the wallet holds
+        percent (optional) current percent data the wallet has
+        cap (optional) maximum amount of money the wallet is allowed to have
         """
 
         wallet_names = [wallet.name for wallet in self.wallets]
@@ -113,7 +75,6 @@ class Account():
     def delete_wallet(self, name: str):
         """
         Delete an existing wallet from your wallets
-        or raises an exception if the wallet couldn't be found
         """
 
         if name == 'main':
@@ -155,8 +116,6 @@ class Account():
     def transfer(self, _from: str, to: str, amount: int = None) -> None:
         """
         Transfer a desired amount of money from one wallet to another
-        Non-valid numbers and money that surpasses a wallet amount
-        raise exceptions
         """
 
         from_wallet = self.get_wallet(_from)
@@ -200,7 +159,7 @@ class Account():
 
     def deduct(self, name: str, amount: int = None):
         """
-        Deduct the desired amount from the wallet
+        Deduct the desired amount of money from a wallet
         """
 
         wallet = self.get_wallet(name)
@@ -237,7 +196,11 @@ class Account():
                     print('Not a valid number format, please try again.')
     
     def deposit(self, amount: int) -> None:
-        """Deposit money and distribute it among all wallets"""
+        """
+        Deposits money and distributes it among all wallets
+        according to their percent data attribute
+        all percent values must add up to 100
+        """
 
         if not self.valid_number(amount):
             print('Not a valid number format.')
@@ -276,7 +239,7 @@ class Account():
             print(f'Cap: ${wallet.cap}\n')
 
     def add(self, name: str, amount: int) -> None:
-        """Add an amount of money to a wallet"""
+        """Adds an amount of money to a wallet"""
         
         wallet = self.get_wallet(name)
         if not wallet:
@@ -287,6 +250,10 @@ class Account():
                 wallet += amount
             else:
                 print('Not a valid number format.')
+
+    def help(self):
+        """Prints info about the class methods"""
+        return help(self)
 
     def __repr__(self) -> str:
         return f'Account: {self.owner}'

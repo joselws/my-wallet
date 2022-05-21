@@ -12,8 +12,8 @@ class TestWallet(unittest.TestCase):
     def test_wallet_correctly_created_default_values(self):
         """Correct Wallet creation"""
         base = Wallet('Base')
-        self.assertIsNone(base.percent)
-        self.assertIsNone(base.cap)
+        self.assertFalse(base.percent)
+        self.assertFalse(base.cap)
         self.assertEqual(base.name, "Base")
         self.assertEqual(base.balance, 0)
         self.assertEqual(repr(base), 'Wallet: Base ($0)')
@@ -31,8 +31,8 @@ class TestWallet(unittest.TestCase):
         """Test the __add__ method of this wallet"""
         test_wallet = Wallet('Test', 50)
         self.assertEqual(test_wallet.balance, 50)
-        self.assertIsNone(test_wallet.percent)
-        self.assertIsNone(test_wallet.cap)
+        self.assertFalse(test_wallet.percent)
+        self.assertFalse(test_wallet.cap)
         
         test_wallet += 50
         self.assertEqual(test_wallet.balance, 100)
@@ -41,8 +41,8 @@ class TestWallet(unittest.TestCase):
         """Test the __sub__ method of this wallet"""
         test_wallet = Wallet('Test', balance=50)
         self.assertEqual(test_wallet.balance, 50)
-        self.assertIsNone(test_wallet.percent)
-        self.assertIsNone(test_wallet.cap)
+        self.assertFalse(test_wallet.percent)
+        self.assertFalse(test_wallet.cap)
         
         test_wallet -= 50
         self.assertEqual(test_wallet.balance, 0)
