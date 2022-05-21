@@ -198,12 +198,12 @@ class Account():
             file.write(wallets_json)
             print('Saved Changes.')
 
-    def deduct(self, wallet_name: str, amount: int = None):
+    def deduct(self, name: str, amount: int = None):
         """
         Deduct the desired amount from the wallet
         """
 
-        wallet = self.get_wallet(wallet_name)
+        wallet = self.get_wallet(name)
         if not wallet:
             print('No wallet under that name could be found.')
             return
