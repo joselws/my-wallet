@@ -60,3 +60,5 @@ For example, `acc = Account('tom')`
 - A wallet called **main** is included by default in all wallets and you cannot delete it unless you do it directly, but you're strongly ***not*** encouraged to do so since this wallet is essential to some of the internal functionalities of the program.
 
 - The functionality of the `cap` data attribute of a Wallet object has not yet been implemented.
+
+- If you find any bugs, please let me know!
