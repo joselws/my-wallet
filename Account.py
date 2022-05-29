@@ -12,12 +12,16 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
         self.__init_wallets_file()
 
+
+    def get_wallet_name(self) -> str:
+        """Returns the name of the wallet JSON file"""
+        return self.__wallet_name
     
     def __init_wallets_file(self) -> None:
         """
@@ -25,8 +29,8 @@ class Account():
         Internal use only
         """
 
-        if os.path.exists(self.wallet_name):
-            with open(self.wallet_name) as file:
+        if os.path.exists(self.__wallet_name):
+            with open(self.__wallet_name) as file:
                 json_content = file.read()
                 if not len(json_content):
                     self.add_wallet('main')
@@ -40,7 +44,7 @@ class Account():
         
         else:
             self.add_wallet('main')
-            with open(self.wallet_name, 'w') as file:
+            with open(self.__wallet_name, 'w') as file:
                 self.save()
                 print('Wallet created.')
 
@@ -62,8 +66,8 @@ class Account():
         cap (optional) maximum amount of money the wallet is allowed to have
         """
 
-        wallet_names = [wallet.name for wallet in self.wallets]
-        if name in wallet_names:
+        __wallet_names = [wallet.name for wallet in self.wallets]
+        if name in __wallet_names:
             print(f'Wallet {name} already exists. Please try again.')
             return
         else:
@@ -153,7 +157,7 @@ class Account():
         """Save changes to json wallet file"""
         wallets: List = [wallet.__dict__ for wallet in self.wallets]
         wallets_json = json.dumps(wallets)
-        with open(self.wallet_name, 'w') as file:
+        with open(self.__wallet_name, 'w') as file:
             file.write(wallets_json)
             print('Saved Changes.')
 
@@ -264,6 +268,18 @@ class Account():
                 wallet += amount
             else:
                 print('Not a valid number format.')
+
+    def reset(self) -> None:
+        """Resets the account to the previous saved state"""
+
+        self.wallets.clear()
+        with open(self.__wallet_name) as file:
+            json_content = file.read()
+
+        wallets: List = json.loads(json_content)
+        for wallet_dict in wallets:
+            wallet = Wallet(**wallet_dict)
+            self.wallets.append(wallet)
 
     def help(self):
         """Prints info about the class methods"""

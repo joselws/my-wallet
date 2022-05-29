@@ -20,7 +20,7 @@ class TestAccount(unittest.TestCase):
 
     def test_account_correctly_created(self):
         """Test that the account was correctly created"""
-        self.assertTrue(os.path.exists(self.account.wallet_name))
+        self.assertTrue(os.path.exists(self.account.get_wallet_name()))
         self.assertEqual(self.account.owner, 'Jose')
         self.assertEqual(len(self.account.wallets), 3)
 
@@ -270,6 +270,33 @@ class TestAccount(unittest.TestCase):
     def test_len(self):
         """Len function returns the amount of wallets"""
         self.assertEqual(len(self.account), 3)
+
+    def test_reset(self):
+        """Load function works properly"""
+        acc = Account('test')
+        acc.add_wallet('test')
+        
+        acc.reset()
+        main = acc.get_wallet('main')
+        emergencies = acc.get_wallet('emergencies')
+        charity = acc.get_wallet('charity')
+
+        self.assertEqual(len(acc.wallets), 3)
+        self.assertEqual(main.name, 'main')
+        self.assertEqual(main.balance, 1500)
+        self.assertEqual(main.percent, 70)
+        self.assertFalse(main.cap)
+
+        self.assertEqual(emergencies.name, 'emergencies')
+        self.assertEqual(emergencies.balance, 500)
+        self.assertEqual(emergencies.percent, 20)
+        self.assertEqual(emergencies.cap, 50000)
+
+        self.assertEqual(charity.name, 'charity')
+        self.assertEqual(charity.balance, 200)
+        self.assertEqual(charity.percent, 10)
+        self.assertFalse(charity.cap)
+
 
 if __name__ == '__main__':
     unittest.main()
