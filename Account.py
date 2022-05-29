@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.__wallet_name = "test_wallet.json"
+        self.__wallet_name = "my_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
