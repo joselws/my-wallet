@@ -179,20 +179,20 @@ class Account():
             else:
                 wallet.balance = 0
 
-    def set_percentages(self) -> None:
+    def set_percents(self) -> None:
         """Show current wallets percents and prompts user to set them"""
 
         print("Showing current wallet percentages")
         for wallet in self.wallets:
             if wallet.name != 'main':
                 print(f'Wallet {wallet.name}: {wallet.percent}%')
-
         print('')   # newline
-        for wallet in self.wallets:
-            if wallet.name == 'main':
-                continue
 
-            new_percent = input(f'Set percent of Wallet {wallet.name}: ')
+        wallets = [wallet.name for wallet in self.wallets if wallet.name != 'main']
+        wallets_dict = {}
+
+        for wallet in wallets:
+            new_percent = input(f'Set percent of Wallet {wallet}: ')
             try:
                 new_percent = int(new_percent)
             except ValueError:
@@ -200,18 +200,33 @@ class Account():
                 return
             else:
                 if self.valid_number(new_percent) and new_percent <= 100 :
-                    wallet.percent = new_percent
+                    wallets_dict[wallet] = new_percent
                 else:
                     print('Not a valid number format, please try again.')
-            # Set 'main' wallet percent to be the remaining percent to complete 100
-            finally:
-                percents = sum([wallet.percent for wallet in self.wallets if wallet.name != 'main'])
-                if percents < 100:
-                    main = self.get_wallet('main')
-                    main.percent = 100 - percents
-                    print('Percents correctly set.\n')
-                else:
-                    print('Percents not correctly set, please try again.\n')
+                    return
+            
+        self.calc_percents(wallets_dict)
+
+    def calc_percents(self, percents) -> None:
+        """Calculates the main wallet percent and set all percents on wallets"""
+        
+        percents_sum = sum([percent for percent in percents.values()])
+        if percents_sum <= 100:
+            main = self.get_wallet('main')
+            main.percent = 100 - percents_sum
+
+            for name, percent in percents.items():
+                self.get_wallet(name).percent = percent
+
+            if self.correct_percent():
+                print('Percent values correctly set on wallets.\n')
+            else:
+                print('Unknown error, please try again!\n')
+
+        else:
+            print('Percents not correctly set, please try again.\n')
+        
+
     
     def deposit(self, amount: int) -> None:
         """

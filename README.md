@@ -51,6 +51,8 @@ For example, `acc = Account('tom')`
 
 - `reset()`: Return to the last saved state of your account. Example: `acc.reset()`
 
+- `wipe()`: Deletes all wallets data in your account; you're left with an empty account with no wallets. Example: `acc.wipe()`
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.

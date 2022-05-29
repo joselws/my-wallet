@@ -1,3 +1,2 @@
 cap feature
-main percent function calculator
-wipe feature
+clear method

@@ -297,9 +297,35 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(charity.percent, 10)
         self.assertFalse(charity.cap)
 
-    def test_calc_percents_valid_data(self):
-        """The percent wallets data is correctly handled"""
-        pass
+    def test_calc_percents_main_percent(self):
+        """The main percent is correctly calculated"""
+        percents = {'emergencies': 30, "charity": 20}
+        self.account.calc_percents(percents)
+        self.assertTrue(self.account.correct_percent())
+        self.assertEqual(self.main.percent, 50)
+        self.assertEqual(self.emergencies.percent, 30)
+        self.assertEqual(self.charity.percent, 20)
+        self.assertEqual(len(self.account), 3)
+
+    def test_calc_percents_main_no_change(self):
+        """Main doesn't change its percent if the sum is already 100"""
+        percents = {'emergencies': 60, "charity": 40}
+        self.account.calc_percents(percents)
+        self.assertTrue(self.account.correct_percent())
+        self.assertEqual(self.main.percent, 0)
+        self.assertEqual(self.emergencies.percent, 60)
+        self.assertEqual(self.charity.percent, 40)
+        self.assertEqual(len(self.account), 3)
+
+    def test_calc_percents_invalid(self):
+        """Operation invalid if percents surpass 100"""
+        percents = {'emergencies': 60, "charity": 60}
+        self.account.calc_percents(percents)
+        self.assertTrue(self.account.correct_percent())
+        self.assertEqual(self.main.percent, 70)
+        self.assertEqual(self.emergencies.percent, 20)
+        self.assertEqual(self.charity.percent, 10)
+        self.assertEqual(len(self.account), 3)
 
     def test_wipe(self):
         """Wipe method delets all wallets"""
