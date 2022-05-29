@@ -1,1 +1,3 @@
 cap feature
+main percent function calculator
+reset feature
