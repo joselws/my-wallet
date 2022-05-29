@@ -49,6 +49,8 @@ For example, `acc = Account('tom')`
 
 - `save()`: Save your changes. Example: `acc.save()`
 
+- `reset()`: Return to the last saved state of your account. Example: `acc.reset()`
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.

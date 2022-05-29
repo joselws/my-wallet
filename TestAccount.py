@@ -297,6 +297,15 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(charity.percent, 10)
         self.assertFalse(charity.cap)
 
+    def test_calc_percents_valid_data(self):
+        """The percent wallets data is correctly handled"""
+        pass
+
+    def test_wipe(self):
+        """Wipe method delets all wallets"""
+        self.account.wipe()
+        self.assertEqual(len(self.account), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

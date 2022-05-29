@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.__wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
 
@@ -280,6 +280,11 @@ class Account():
         for wallet_dict in wallets:
             wallet = Wallet(**wallet_dict)
             self.wallets.append(wallet)
+
+    def wipe(self) -> None:
+        """Deletes all wallet data in your account"""
+        self.wallets.clear()
+        print('All wallet data has been deleted.')
 
     def help(self):
         """Prints info about the class methods"""
