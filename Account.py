@@ -296,6 +296,11 @@ class Account():
             wallet = Wallet(**wallet_dict)
             self.wallets.append(wallet)
 
+    def clear(self) -> None:
+        """Sets all wallets data to zero"""
+        for wallet in self.wallets:
+            wallet.percent = wallet.balance = wallet.cap = 0
+
     def wipe(self) -> None:
         """Deletes all wallet data in your account"""
         self.wallets.clear()

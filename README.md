@@ -53,6 +53,8 @@ For example, `acc = Account('tom')`
 
 - `wipe()`: Deletes all wallets data in your account; you're left with an empty account with no wallets. Example: `acc.wipe()`
 
+- `clear()`: Sets all data in all your wallets to zero. Example: `acc.clear()`
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.

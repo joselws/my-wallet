@@ -332,6 +332,25 @@ class TestAccount(unittest.TestCase):
         self.account.wipe()
         self.assertEqual(len(self.account), 0)
 
+    def test_clear(self):
+        """Clear method working correctly"""
+        self.account.clear()
+        self.assertEqual(len(self.account.wallets), 3)
+
+        self.assertEqual(self.main.name, 'main')
+        self.assertEqual(self.main.balance, 0)
+        self.assertEqual(self.main.percent, 0)
+        self.assertEqual(self.main.cap, 0)
+
+        self.assertEqual(self.emergencies.name, 'emergencies')
+        self.assertEqual(self.emergencies.balance, 0)
+        self.assertEqual(self.emergencies.percent, 0)
+        self.assertEqual(self.emergencies.cap, 0)
+
+        self.assertEqual(self.charity.name, 'charity')
+        self.assertEqual(self.charity.balance, 0)
+        self.assertEqual(self.charity.percent, 0)
+        self.assertEqual(self.charity.cap, 0)
 
 if __name__ == '__main__':
     unittest.main()

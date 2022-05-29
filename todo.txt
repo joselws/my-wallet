@@ -1,2 +1,1 @@
 cap feature
-clear method
