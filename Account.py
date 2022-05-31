@@ -12,9 +12,16 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.__wallet_name = "test_wallet.json"
+        self.__wallet_name = "my_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
+        self.savings_wallets: List[str] = [
+            'savings',
+            'emergencies',
+            'retirement',
+            'travels',
+            'investing'
+        ]
 
         self.__init_wallets_file()
 
@@ -283,6 +290,15 @@ class Account():
                 wallet += amount
             else:
                 print('Not a valid number format.')
+
+    def usable(self) -> str:
+        """
+        Returns the total amount of money you may use 
+        (the money not in savings wallets)
+        """
+
+        usable_money = sum([wallet.balance for wallet in self.wallets if wallet.name not in self.savings_wallets])
+        return f'${usable_money}'
 
     def reset(self) -> None:
         """Resets the account to the previous saved state"""

@@ -55,6 +55,8 @@ For example, `acc = Account('tom')`
 
 - `clear()`: Sets all data in all your wallets to zero. Example: `acc.clear()`
 
+- `usable()`: Prints the total amount of usable money you currenty have, that is, your total except the money on savings wallets. Example: `acc.usable()`
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.

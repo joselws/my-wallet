@@ -16,6 +16,7 @@ class TestAccount(unittest.TestCase):
         self.main = self.account.get_wallet('main')
         self.emergencies = self.account.get_wallet('emergencies')
         self.charity = self.account.get_wallet('charity')
+        self.savings_wallets = ['savings', 'emergencies', 'investing', 'travels', 'retirement']
 
 
     def test_account_correctly_created(self):
@@ -351,6 +352,11 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.balance, 0)
         self.assertEqual(self.charity.percent, 0)
         self.assertEqual(self.charity.cap, 0)
+
+    def test_usable(self):
+        """Usable method works correctly"""
+        self.assertEqual(self.account.usable(), '$1700')
+        
 
 if __name__ == '__main__':
     unittest.main()
