@@ -79,7 +79,11 @@ class Account():
             return
         else:
             if self.valid_number(balance) and self.valid_number(percent) and self.valid_number(cap):
-                self.wallets.append(Wallet(name, balance, percent, cap))
+                new_wallet = Wallet(name, balance, percent, cap)
+                if new_wallet.cap and new_wallet.balance > new_wallet.cap:
+                    print('Error: Balance value must not be greater than Cap')
+                    return
+                self.wallets.append(new_wallet)
             else:
                 print(f'Bad input, please try again.')
 
@@ -144,6 +148,7 @@ class Account():
                 return
             from_wallet -= amount
             to_wallet += amount
+            self.correct_cap(to_wallet)
         
         # Transfer all the money if amount is None
         else:
@@ -232,9 +237,29 @@ class Account():
 
         else:
             print('Percents not correctly set, please try again.\n')
-        
 
-    
+    def correct_cap(self, wallet: Wallet) -> None:
+        """
+        Checks whether the balance of the wallet surpasses its cap,
+        and if so, perform the necessary adjustments and calculations
+        """
+
+        if not (main := self.get_wallet('main')):
+            self.add_wallet('main')
+            main = self.get_wallet('main')
+            print('main Wallet created.')
+
+        if wallet.cap and wallet.balance > wallet.cap:
+            extra_money = wallet.balance - wallet.cap
+            wallet.balance = wallet.cap
+
+            main.balance += extra_money
+            wallet.percent = 0
+
+            print(f"Wallet {wallet.name} balance set to {wallet.cap} and transfering {extra_money} to main")
+            print(f'Wallet {wallet.name} with balance of {wallet.balance} surpassed its cap of {wallet.cap} by {extra_money}')
+            print(f"Transfering {main.balance} to main\n")
+        
     def deposit(self, amount: int) -> None:
         """
         Deposits money and distributes it among all wallets
@@ -263,6 +288,7 @@ class Account():
             print(f'Depositing {part_money} to {name}')
             wallet.balance += part_money
             amount -= part_money
+            self.correct_cap(wallet)
 
         # transfer the remaining amount of money to main
         main = self.get_wallet('main')
@@ -288,6 +314,7 @@ class Account():
         else:
             if self.valid_number(amount):
                 wallet += amount
+                self.correct_cap(wallet)
             else:
                 print('Not a valid number format.')
 

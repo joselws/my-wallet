@@ -360,6 +360,109 @@ class TestAccount(unittest.TestCase):
     def test_non_usable(self):
         """non_usable method works correctly"""
         self.assertEqual(self.account.non_usable(), '$500')
+
+    def test_add_wallet_fails_balance_above_cap(self):
+        """You can't add wallets if the balance is higher than the cap"""
+        self.account.add_wallet('test', 2000, 40, 1000)
+        self.assertEqual(len(self.account), 3)
+        self.assertIsNone(self.account.get_wallet('test'))
+
+    def test_transfer_to_surpasses_cap(self):
+        """
+        If a transfer to a wallet surpasses the cap,
+        the extra amount goes into 'main'
+        """
+
+        self.account.add_wallet('test', 0, 0, 100)
+        self.account.transfer('emergencies', 'test', 200)
+        test = self.account.get_wallet('test')
+        self.assertEqual(self.emergencies.balance, 300)
+        self.assertEqual(test.balance, 100)
+        self.assertEqual(test.percent, 0)
+        self.assertEqual(self.main.balance, 1600)
+
+    def test_correct_cap_valid_wallet(self):
+        """Make no changes to a valid wallet"""
+        test = Wallet('test', 1000, 20, 2000)
+        test2 = Wallet('test2', 2000, 30, 2000)
         
+        self.account.correct_cap(test)
+        self.account.correct_cap(test2)
+        
+        self.assertEqual(test.balance, 1000)
+        self.assertEqual(test2.balance, 2000)
+        self.assertEqual(test.percent, 20)
+        self.assertEqual(test2.percent, 30)
+    
+    def test_correct_cap_invalid_wallet(self):
+        """Make changes to wallets where balance surpass cap"""
+        
+        test = Wallet('test', 5000, 20, 2000)
+        self.account.correct_cap(test)
+        
+        self.assertEqual(test.balance, 2000)
+        self.assertEqual(test.percent, 0)
+        self.assertEqual(self.main.balance, 4500)
+
+    def test_correct_cap_main_created(self):
+        """Create a main wallet and perform operations if it doesn't exist"""
+
+        self.account.wallets.remove(self.main)
+        self.assertIsNone(self.account.get_wallet('main'))
+
+        test = Wallet('test', 5000, 20, 2000)
+        self.account.correct_cap(test)
+        main = self.account.get_wallet('main')
+        
+        self.assertEqual(test.balance, 2000)
+        self.assertEqual(test.percent, 0)
+        self.assertEqual(main.balance, 3000)
+
+    def test_correct_cap_zero(self):
+        """Cap zero means that there is no limit"""
+
+        test = Wallet('test', 5000, 20, 0)
+        self.account.correct_cap(test)
+        
+        self.assertEqual(test.balance, 5000)
+        self.assertEqual(test.percent, 20)
+
+    def test_cap_on_deposit(self):
+        """Cap feature works on deposits"""
+
+        self.emergencies.cap = 600
+        self.charity.cap = 1000
+        self.account.deposit(1000)
+
+        self.assertEqual(self.main.balance, 2300)
+        self.assertEqual(self.main.percent, 70)
+        self.assertEqual(self.main.cap, 0)
+        self.assertEqual(self.emergencies.balance, 600)
+        self.assertEqual(self.emergencies.percent, 0)
+        self.assertEqual(self.emergencies.cap, 600)
+        self.assertEqual(self.charity.balance, 300)
+        self.assertEqual(self.charity.percent, 10)
+        self.assertEqual(self.charity.cap, 1000)
+
+    def test_cap_on_add_surpass_balance(self):
+        """Cap feature works on add to wallet"""
+
+        self.charity.cap = 1000
+        self.account.add('charity', 1000)
+
+        self.assertEqual(self.charity.balance, 1000)
+        self.assertEqual(self.charity.percent, 0)
+        self.assertEqual(self.main.balance, 1700)
+
+    def test_cap_on_add_valid(self):
+        """Cap doesn't trigger on valid balances"""
+
+        self.charity.cap = 1000
+        self.account.add('charity', 500)
+
+        self.assertEqual(self.charity.balance, 700)
+        self.assertEqual(self.charity.percent, 10)
+        self.assertEqual(self.main.balance, 1500)
+
 if __name__ == '__main__':
     unittest.main()

@@ -57,6 +57,8 @@ For example, `acc = Account('tom')`
 
 - `usable()`: Prints the total amount of usable money you currenty have, that is, your total except the money on savings wallets. Example: `acc.usable()`
 
+- `non_usable()`: Prints the total amount of usable money you currenty have in savings wallets, that is, the money you should not use. Example: `acc.non_usable()`
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.
