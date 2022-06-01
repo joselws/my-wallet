@@ -1,1 +1,5 @@
-cap feature
+set cap
+edit wallet
+update readne
+clear one wallet
+show_single_wallet
