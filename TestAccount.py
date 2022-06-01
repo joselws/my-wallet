@@ -356,7 +356,10 @@ class TestAccount(unittest.TestCase):
     def test_usable(self):
         """Usable method works correctly"""
         self.assertEqual(self.account.usable(), '$1700')
-        
 
+    def test_non_usable(self):
+        """non_usable method works correctly"""
+        self.assertEqual(self.account.non_usable(), '$500')
+        
 if __name__ == '__main__':
     unittest.main()

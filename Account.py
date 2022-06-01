@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.__wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
@@ -299,6 +299,23 @@ class Account():
 
         usable_money = sum([wallet.balance for wallet in self.wallets if wallet.name not in self.savings_wallets])
         return f'${usable_money}'
+
+    def non_usable(self) -> str:
+        """
+        Returns the total amount of money you should NOT use 
+        (the money in savings wallets)
+        """
+
+        non_usable_money = sum([wallet.balance for wallet in self.wallets if wallet.name in self.savings_wallets])
+        return f'${non_usable_money}'
+
+    def summary(self) -> None:
+        """Prints all relevant information about your account"""
+
+        print(f'Total amount of money {self.total()}')
+        print(f'Total usable money {self.usable()}')
+        print(f'Total non-usable of money {self.non_usable()}\n')
+        self.check_wallets()
 
     def reset(self) -> None:
         """Resets the account to the previous saved state"""
