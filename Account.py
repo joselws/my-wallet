@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.__wallet_name = "test_wallet.json"
+        self.__wallet_name = "my_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
@@ -302,7 +302,12 @@ class Account():
             print(f'Name: {wallet.name}')
             print(f'Balance: ${wallet.balance}')
             print(f'Percent: {wallet.percent}%')
-            print(f'Cap: ${wallet.cap}\n')
+            print(f'Cap: ${wallet.cap}')
+            
+            if wallet.cap:
+                print(f"Amount remaining to reach the cap: {(wallet.cap - wallet.balance)}\n")
+            else:
+                print(f"Amount remaining to reach the cap: No limit\n")
 
     def add(self, name: str, amount: int) -> None:
         """Adds an amount of money to a wallet"""
