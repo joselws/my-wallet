@@ -4,7 +4,17 @@ This is a Python program used to help you manage your personal finances. Have al
 
 You manage one account object under any name, and you call methods of that account object to do all the functionalities providen in this program.
 
-All your data is saved into a JSON file that serves the purpose of a tiny database.
+All your data is saved in a local JSON file that serves the purpose of a tiny database.
+
+Each wallet has 4 data attributes:
+
+1. **name** is the name of the wallet (duh)
+
+2. **balance** is the current amount of money the wallet has
+
+3. **percent** is the respective amount of money this wallet will receive in a deposit
+
+4. **cap** is the maximum amount of money the wallet is allowed to hold. If it is set to zero (0), then there is no maximum. i.e. the wallet is allwed
 
 ## Quickstart
 
@@ -59,6 +69,8 @@ For example, `acc = Account('tom')`
 
 - `non_usable()`: Prints the total amount of usable money you currenty have in savings wallets, that is, the money you should not use. Example: `acc.non_usable()`
 
+- `summary()`: Prints all important information about the account, like total money and wallet data.
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.
@@ -68,7 +80,5 @@ For example, `acc = Account('tom')`
 ## Important
 
 - A wallet called **main** is included by default in all wallets and you cannot delete it unless you do it directly, but you're strongly ***not*** encouraged to do so since this wallet is essential to some of the internal functionalities of the program.
-
-- The functionality of the `cap` data attribute of a Wallet object has not yet been implemented.
 
 - If you find any bugs, please let me know!

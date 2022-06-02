@@ -464,5 +464,9 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.percent, 10)
         self.assertEqual(self.main.balance, 1500)
 
+    def test_set_valid_cap(self):
+        """"""
+        pass
+
 if __name__ == '__main__':
     unittest.main()

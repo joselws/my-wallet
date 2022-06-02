@@ -4,9 +4,9 @@ class Wallet():
     """
     Create your own wallet to manage a particular financial purpose. Attributes:
     name (string): Required
-    percent (integer): Optional, None if not provided
+    percent (integer): Optional, 0 if not provided
     balance (integer): Optional, 0 if not provided
-    cap (integer): Optional, None if not provided
+    cap (integer): Optional, 0 if not provided
     """
     
     def __init__(self, name: str, balance: int = 0, percent: int = 0, cap: int = 0):
