@@ -305,9 +305,9 @@ class Account():
             print(f'Cap: ${wallet.cap}')
             
             if wallet.cap:
-                print(f"Amount remaining to reach the cap: {(wallet.cap - wallet.balance)}\n")
+                print(f"${(wallet.cap - wallet.balance)} more to reach the cap\n")
             else:
-                print(f"Amount remaining to reach the cap: No limit\n")
+                print("No cap limit\n")
 
     def add(self, name: str, amount: int) -> None:
         """Adds an amount of money to a wallet"""
