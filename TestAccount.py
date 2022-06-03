@@ -465,8 +465,27 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.main.balance, 1500)
 
     def test_set_valid_cap(self):
-        """"""
-        pass
+        """When a cap is set higher to the balance, no changes are made to main"""
+        self.account.set_cap('charity', 300)
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.charity.balance, 200)
+        self.assertEqual(self.charity.percent, 10)
+    
+    def test_set_invalid_cap(self):
+        """When a cap is set higher to the balance, no changes are made to main"""
+        self.account.set_cap('emergencies', 300)
+        self.assertEqual(self.main.balance, 1700)
+        self.assertEqual(self.emergencies.balance, 300)
+        self.assertEqual(self.emergencies.percent, 0)
 
+    def test_set_invalid_cap_value(self):
+        """Don't do anything if the cap value is invalid"""
+        self.account.set_cap('emergencies', 'hi')
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.emergencies.balance, 500)
+        self.assertEqual(self.emergencies.percent, 20)
+        self.assertEqual(self.emergencies.cap, 50000)
+
+    
 if __name__ == '__main__':
     unittest.main()

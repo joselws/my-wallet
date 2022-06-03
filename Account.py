@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self, owner: str):
-        self.__wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.owner: str = owner
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
@@ -360,6 +360,19 @@ class Account():
         for wallet_dict in wallets:
             wallet = Wallet(**wallet_dict)
             self.wallets.append(wallet)
+
+    def set_cap(self, name: str, cap: int) -> None:
+        """Set the cap attribute of a wallet given its name"""
+
+        if not self.valid_number(cap):
+            print('Not a valid cap value, please try again.')
+            return
+
+        if wallet := self.get_wallet(name):
+            wallet.cap = cap
+            self.correct_cap(wallet)
+        else:
+            print('Wallet not found!')
 
     def clear(self) -> None:
         """Sets all wallets data to zero"""
