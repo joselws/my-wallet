@@ -11,9 +11,8 @@ class Account():
     all the wallets for an owner. 
     """
 
-    def __init__(self, owner: str):
+    def __init__(self):
         self.__wallet_name = "test_wallet.json"
-        self.owner: str = owner
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'savings',
@@ -424,7 +423,7 @@ class Account():
         return help(self)
 
     def __repr__(self) -> str:
-        return f'Account: {self.owner}'
+        return f'Account: {[wallet.name for wallet in self.wallets]}'
 
     def __len__(self) -> int:
         return len(self.wallets)

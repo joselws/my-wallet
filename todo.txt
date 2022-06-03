@@ -1,4 +1,3 @@
 edit wallet
 update readne
-delete owner attribute
 possible feature: status attribute with 'savings', 'active', 'blocked'

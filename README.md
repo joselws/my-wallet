@@ -28,10 +28,10 @@ Each wallet has 4 data attributes:
 
 ```
 >>> from Account import Account
->>> <your_account_name> = Account('<desired_account_name>')
+>>> <your_account_object> = Account()
 ```
 
-For example, `acc = Account('tom')`
+For example, `acc = Account()`
 
 5. Use the `help()` function or the `help()` method on the Account object if you need a quick overview of the commands in-session. For example, `help(acc)` or `acc.help()`
 
@@ -82,6 +82,8 @@ For example, `acc = Account('tom')`
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.
+
+- Simply type `acc` in the terminal or `repr(acc)` to get a list of all your wallets.
 
 - Use `len(acc)` to print the number of wallets you have.
 

@@ -12,7 +12,7 @@ class TestAccount(unittest.TestCase):
     """
 
     def setUp(self):
-        self.account = Account('Jose')
+        self.account = Account()
         self.main = self.account.get_wallet('main')
         self.emergencies = self.account.get_wallet('emergencies')
         self.charity = self.account.get_wallet('charity')
@@ -22,7 +22,6 @@ class TestAccount(unittest.TestCase):
     def test_account_correctly_created(self):
         """Test that the account was correctly created"""
         self.assertTrue(os.path.exists(self.account.get_wallet_name()))
-        self.assertEqual(self.account.owner, 'Jose')
         self.assertEqual(len(self.account.wallets), 3)
 
         self.assertEqual(self.main.name, 'main')
@@ -114,7 +113,7 @@ class TestAccount(unittest.TestCase):
 
     def test_correct_percent_below_100(self):
         """percent sum below 100 return false"""
-        test_account = Account('test')
+        test_account = Account()
         test_account.wallets.clear()
         test_account.add_wallet('new1', 100, 20)
         test_account.add_wallet('new2', 100)
@@ -124,7 +123,7 @@ class TestAccount(unittest.TestCase):
 
     def test_correct_percent_zero(self):
         """zero percent sum return false"""
-        test_account2 = Account('test2')
+        test_account2 = Account()
         test_account2.wallets.clear()
         test_account2.add_wallet('new5')
         test_account2.add_wallet('new6')
@@ -180,7 +179,7 @@ class TestAccount(unittest.TestCase):
         self.account.save()
 
         # read json file and confirm new wallet values
-        account = Account('Jose')
+        account = Account()
         test = account.get_wallet('test')
         self.assertEqual(len(account.wallets), 4)
         self.assertEqual(test.name, 'test')
@@ -195,7 +194,7 @@ class TestAccount(unittest.TestCase):
         account.save()
 
         # read json file and confirm new wallet was deleted
-        account = Account('Jose')
+        account = Account()
         self.assertEqual(len(account.wallets), 3)
         self.assertIsNone(account.get_wallet('test'))
 
@@ -266,7 +265,7 @@ class TestAccount(unittest.TestCase):
 
     def test_repr(self):
         """Repr method correctly working"""
-        self.assertEqual(repr(self.account), 'Account: Jose')
+        self.assertEqual(repr(self.account), "Account: ['main', 'emergencies', 'charity']")
 
     def test_len(self):
         """Len function returns the amount of wallets"""
@@ -274,7 +273,7 @@ class TestAccount(unittest.TestCase):
 
     def test_reset(self):
         """Load function works properly"""
-        acc = Account('test')
+        acc = Account()
         acc.add_wallet('test')
         
         acc.reset()
