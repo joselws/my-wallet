@@ -69,6 +69,10 @@ For example, `acc = Account('tom')`
 
 - `non_usable()`: Prints the total amount of usable money you currenty have in savings wallets, that is, the money you should not use. Example: `acc.non_usable()`
 
+- `set_cap(name: str, cap: int)`: Sets the *cap* attribute of a wallet given its *name*. Example: `acc.set_cap('savings', 50000)`
+
+- `rename(wallet_name: str, new_name: str)`: Renames an existing wallet. Can't rename your `main` wallet. Example: `acc.rename('savings', 'givings')`
+
 - `summary()`: Prints all important information about the account, like total money and wallet data.
 
 ## Tips

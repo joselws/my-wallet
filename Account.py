@@ -349,6 +349,18 @@ class Account():
         print(f'Total non-usable of money {self.non_usable()}\n')
         self.check_wallets()
 
+    def rename(self, wallet_name: str, new_name: str) -> None:
+        """Renames a wallet"""
+
+        if wallet_name == 'main':
+            print("Can't rename the main wallet.")
+            return
+        
+        if wallet := self.get_wallet(wallet_name):
+            wallet.name = new_name
+        else:
+            print(f"Wallet {wallet_name} doesn't exist!")
+
     def reset(self) -> None:
         """Resets the account to the previous saved state"""
 
@@ -366,6 +378,10 @@ class Account():
 
         if not self.valid_number(cap):
             print('Not a valid cap value, please try again.')
+            return
+
+        if name == 'main':
+            print("You can't do this operation on the main wallet.")
             return
 
         if wallet := self.get_wallet(name):

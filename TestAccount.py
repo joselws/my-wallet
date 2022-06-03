@@ -486,6 +486,33 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.emergencies.percent, 20)
         self.assertEqual(self.emergencies.cap, 50000)
 
+    def test_cant_set_cap_main(self):
+        """Setting the cap attribute on main is not allowed"""
+        self.account.set_cap('main', 500)
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.main.percent, 70)
+        self.assertEqual(self.main.cap, 0)
+
+    def test_rename_valid_wallet(self):
+        """Rename works correctly on an existing wallet"""
+        self.account.rename('charity', 'givings')
+        self.assertEqual(len(self.account), 3)
+        self.assertTrue(self.account.get_wallet('givings'))
+        self.assertEqual(self.charity.name, 'givings')
+
+    def test_rename_invalid_main(self):
+        """Rename doesn't work on main"""
+        self.account.rename('main', 'principal')
+        self.assertEqual(self.main.name, 'main')
+
+    def test_rename_non_existing_wallet(self):
+        """Can't rename a nonexistant wallet"""
+        self.account.rename('test', 'unit')
+        self.assertEqual(len(self.account), 3)
+        self.assertEqual(self.main.name, 'main')
+        self.assertEqual(self.charity.name, 'charity')
+        self.assertEqual(self.emergencies.name, 'emergencies')
+
     
 if __name__ == '__main__':
     unittest.main()
