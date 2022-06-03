@@ -1,7 +1,6 @@
-set cap
 edit wallet
 update readne
 clear one wallet
 show_single_wallet
 delete owner attribute
-show how much to get to the cap
+possible feature: status attribute with 'savings', 'active', 'blocked'
