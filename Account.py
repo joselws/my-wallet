@@ -401,10 +401,18 @@ class Account():
         else:
             print('Wallet not found!')
 
-    def clear(self) -> None:
+    def clear_all(self) -> None:
         """Sets all wallets data to zero"""
         for wallet in self.wallets:
             wallet.percent = wallet.balance = wallet.cap = 0
+
+    def clear(self, name: str) -> None:
+        """Set all data of a given wallet to zero"""
+        
+        if wallet := self.get_wallet(name):
+            wallet.balance = wallet.percent = wallet.cap = 0
+        else:
+            print(f"Wallet {name} doesn't exist!")
 
     def wipe(self) -> None:
         """Deletes all wallet data in your account"""
