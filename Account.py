@@ -349,6 +349,17 @@ class Account():
         print(f'Total non-usable of money {self.non_usable()}\n')
         self.check_wallets()
 
+    def show(self, name: str):
+        """Show all properties of a wallet given its name"""
+        
+        if wallet := self.get_wallet(name):
+            print(f"Name: {wallet.name}")
+            print(f"balance: {wallet.balance}")
+            print(f"percent: {wallet.percent}")
+            print(f"cap: {wallet.cap}\n")
+        else:
+            print(f"Wallet {name} doesn't exist!")
+
     def rename(self, wallet_name: str, new_name: str) -> None:
         """Renames a wallet"""
 
