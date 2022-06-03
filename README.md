@@ -63,7 +63,9 @@ For example, `acc = Account('tom')`
 
 - `wipe()`: Deletes all wallets data in your account; you're left with an empty account with no wallets. Example: `acc.wipe()`
 
-- `clear()`: Sets all data in all your wallets to zero. Example: `acc.clear()`
+- `clear_all()`: Sets all data in all your wallets to zero. Example: `acc.clear_all()`
+
+- `clear(name: str)`: Sets all data of a given wallet to zero. Example: `acc.clear('emergencies')`
 
 - `usable()`: Prints the total amount of usable money you currenty have, that is, your total except the money on savings wallets. Example: `acc.usable()`
 
@@ -72,6 +74,8 @@ For example, `acc = Account('tom')`
 - `set_cap(name: str, cap: int)`: Sets the *cap* attribute of a wallet given its *name*. Example: `acc.set_cap('savings', 50000)`
 
 - `rename(wallet_name: str, new_name: str)`: Renames an existing wallet. Can't rename your `main` wallet. Example: `acc.rename('savings', 'givings')`
+
+- `show(name: str)`: Displays all information about a single wallet given its *name*. Example: `acc.show('savings')`
 
 - `summary()`: Prints all important information about the account, like total money and wallet data.
 

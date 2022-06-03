@@ -335,7 +335,7 @@ class TestAccount(unittest.TestCase):
 
     def test_clear(self):
         """Clear method working correctly"""
-        self.account.clear()
+        self.account.clear_all()
         self.assertEqual(len(self.account.wallets), 3)
 
         self.assertEqual(self.main.name, 'main')
@@ -513,6 +513,13 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.name, 'charity')
         self.assertEqual(self.emergencies.name, 'emergencies')
 
-    
+    def test_clear_wallet(self):
+        """Test clear wallet works correctly"""
+        self.account.clear('emergencies')
+        self.assertEqual(self.emergencies.balance, 0)
+        self.assertEqual(self.emergencies.percent, 0)
+        self.assertEqual(self.emergencies.cap, 0)
+
+
 if __name__ == '__main__':
     unittest.main()
