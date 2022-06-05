@@ -132,11 +132,29 @@ class TestAccount(unittest.TestCase):
         """Tests for the valid_number method"""
         self.assertTrue(self.account.valid_number(10))
         self.assertTrue(self.account.valid_number(0))
+        
+    def test_invalid_number(self):
+        """These values return false on valid number"""
         self.assertFalse(self.account.valid_number('10'))
         self.assertFalse(self.account.valid_number(4.3))
         self.assertFalse(self.account.valid_number(-9))
         self.assertFalse(self.account.valid_number(True))
         self.assertFalse(self.account.valid_number(None))
+
+    def test_multiple_valid_numbers(self):
+        """Multiple values are valid"""
+        self.assertTrue(self.account.valid_number(10, 15))
+        self.assertTrue(self.account.valid_number(10, 15, 20))
+        self.assertTrue(self.account.valid_number(10, 15, 0))
+
+    def test_multiple_numbers_invalid(self):
+        """False if at least one of the numbers is not valid"""
+        self.assertFalse(self.account.valid_number(40, '10', 2))
+        self.assertFalse(self.account.valid_number(40, -4, 0))
+        self.assertFalse(self.account.valid_number(40, True, 0))
+        self.assertFalse(self.account.valid_number(40, False, 0))
+        self.assertFalse(self.account.valid_number(40, None, 0))
+        self.assertFalse(self.account.valid_number('3', True, -23, None))
 
     def test_transfer(self):
         """Tests for the transfer feature"""
@@ -503,6 +521,11 @@ class TestAccount(unittest.TestCase):
         self.account.rename('main', 'principal')
         self.assertEqual(self.main.name, 'main')
 
+    def test_rename_existing_wallet(self):
+        """Can't rename to an existing wallet"""
+        self.account.rename('charity', 'emergencies')
+        self.assertEqual(self.charity.name, 'charity')
+
     def test_rename_non_existing_wallet(self):
         """Can't rename a nonexistant wallet"""
         self.account.rename('test', 'unit')
@@ -530,6 +553,45 @@ class TestAccount(unittest.TestCase):
     def test_empty_total_on(self):
         """Empty total on names return empty string"""    
         self.assertEqual(self.account.total_on(), "")
+
+    def test_valid_edit(self):
+        """Edit feature works correctly on valid args"""
+        self.account.edit('charity', 'givings', 500, 50, 1000)
+        self.assertEqual(self.charity.name, 'givings')
+        self.assertEqual(self.charity.balance, 500)
+        self.assertEqual(self.charity.percent, 50)
+        self.assertEqual(self.charity.cap, 1000)
+
+    def test_edit_no_main(self):
+        """You can't edit the main wallet"""
+        self.account.edit('main', 'principal', 500, 50, 1000)
+        self.assertEqual(self.main.name, 'main')
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.main.percent, 70)
+        self.assertEqual(self.main.cap, 0)
+
+    def test_edit_no_existing_name(self):
+        """You can't rename to an existing wallet"""
+        self.account.edit('charity', 'emergencies', 500, 50, 1000)
+        self.assertEqual(self.charity.name, 'charity')
+        self.assertEqual(self.charity.balance, 200)
+        self.assertEqual(self.charity.percent, 10)
+        self.assertEqual(self.charity.cap, 0)
+
+    def test_edit_wallet_doesnt_exist(self):
+        """Can't edit a wallet that doesn't exist"""
+        self.account.edit('test', 'testing', 10, 10, 10)
+        self.assertEqual(self.main.name, 'main')
+        self.assertEqual(self.charity.name, 'charity')
+        self.assertEqual(self.emergencies.name, 'emergencies')
+
+    def test_can_rename_to_same_name(self):
+        """Changes to name are optional"""
+        self.account.edit('charity', 'charity', 500, 50, 1000)
+        self.assertEqual(self.charity.name, 'charity')
+        self.assertEqual(self.charity.balance, 500)
+        self.assertEqual(self.charity.percent, 50)
+        self.assertEqual(self.charity.cap, 1000)
 
 
 if __name__ == '__main__':

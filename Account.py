@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'savings',
@@ -117,16 +117,16 @@ class Account():
         else:
             return False
 
-    def valid_number(self, value) -> bool:
+    def valid_number(self, *args: Tuple[int]) -> bool:
         """
-        Returns true if the given number is a positive integer
+        Returns true if the given numbers in args are positive integers
         Otherwise returns False
         """
 
-        if type(value) is int and value >= 0:
-            return True
-        else:
-            return False 
+        for value in args:
+            if type(value) is not int or value < 0:
+                return False 
+        return True
 
     def transfer(self, _from: str, to: str, amount: int = None) -> None:
         """
@@ -323,6 +323,30 @@ class Account():
             else:
                 print('Not a valid number format.')
 
+    def edit(self, wallet_name: str, name: str, balance: int, percent: int, cap: int) -> None:
+        """
+        edit an existing wallet
+        
+        args:
+            - wallet (str): Name of the wallet you want to edit
+            - name (str): New name you want to put to your wallet
+            - balance, percent, cap (int): respective values
+        """
+
+        if wallet_name == 'main':
+            print("Can't edit main.")
+            return
+            
+        if current_wallet := self.get_wallet(wallet_name):
+            invalid_names = [wallet.name for wallet in self.wallets if wallet.name != current_wallet.name]
+            if name not in invalid_names and self.valid_number(balance, percent, cap):
+                current_wallet.name = name
+                current_wallet.balance = balance
+                current_wallet.percent = percent
+                current_wallet.cap = cap
+        else:
+            print(f"Wallet {wallet_name} couldn't be found.")
+
     def usable(self) -> str:
         """
         Returns the total amount of money you may use 
@@ -385,10 +409,10 @@ class Account():
             print("Can't rename the main wallet.")
             return
         
-        if wallet := self.get_wallet(wallet_name):
+        if (wallet := self.get_wallet(wallet_name)) and not self.get_wallet(new_name):
             wallet.name = new_name
         else:
-            print(f"Wallet {wallet_name} doesn't exist!")
+            print(f"Error with wallet names, please try again!")
 
     def reset(self) -> None:
         """Resets the account to the previous saved state"""
