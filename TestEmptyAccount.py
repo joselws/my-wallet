@@ -34,6 +34,6 @@ class TestAccount(unittest.TestCase):
         new_acc = Account()
         self.assertTrue(os.path.exists(self.account.get_wallet_name()))
 
-
+    
 if __name__ == '__main__':
     unittest.main()
