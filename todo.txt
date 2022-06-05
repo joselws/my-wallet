@@ -1,4 +1,4 @@
-edit wallet
 update readne
 possible feature: status attribute with 'savings', 'active', 'blocked'
 transactions
+add helpful prints on operations

@@ -79,6 +79,10 @@ For example, `acc = Account()`
 
 - `summary()`: Prints all important information about the account, like total money and wallet data.
 
+- `total_on(*)`:
+
+- `edit()`:
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.
