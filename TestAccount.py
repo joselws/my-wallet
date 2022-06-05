@@ -548,11 +548,11 @@ class TestAccount(unittest.TestCase):
 
     def test_invalid_total_on(self):
         """Invalid names return empty string"""
-        self.assertEqual(self.account.total_on("main", "test"), "")
+        self.assertEqual(self.account.total_on("main", "test"), None)
 
     def test_empty_total_on(self):
         """Empty total on names return empty string"""    
-        self.assertEqual(self.account.total_on(), "")
+        self.assertEqual(self.account.total_on(), None)
 
     def test_valid_edit(self):
         """Edit feature works correctly on valid args"""

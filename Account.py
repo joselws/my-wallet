@@ -12,7 +12,7 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "test_wallet.json"
+        self.__wallet_name = "my_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'savings',
@@ -84,6 +84,7 @@ class Account():
                     print('Error: Balance value must not be greater than Cap')
                     return
                 self.wallets.append(new_wallet)
+                print(f"Wallet {new_wallet.name} created.")
             else:
                 print(f'Bad input, please try again.')
 
@@ -102,6 +103,7 @@ class Account():
         else:
             self.transfer(name, 'main')
             self.wallets.remove(wallet_to_delete)
+            print(f"Wallet {name} deleted.")
 
     def correct_percent(self) -> bool:
         """
@@ -109,7 +111,7 @@ class Account():
         Return false otherwise
         """
 
-        percents = [wallet.percent for wallet in self.wallets if wallet.percent is not None]
+        percents = [wallet.percent for wallet in self.wallets]
         if not percents:
             return False
         elif sum(percents) == 100:
@@ -146,15 +148,24 @@ class Account():
             if amount > from_wallet.balance:
                 print('Money to transfer surpasses wallet amount. Please try again.')
                 return
+
+            print(f"Balance of {from_wallet.name} changed from {from_wallet.balance} ", end="")
             from_wallet -= amount
+            print(f"to {from_wallet.balance}")
+            print(f"Balance of {to_wallet.name} changed from {to_wallet.balance} ", end="")
             to_wallet += amount
+            print(f"to {to_wallet.balance}")
             self.correct_cap(to_wallet)
         
         # Transfer all the money if amount is None
         else:
             amount = from_wallet.balance
+            print(f"Balance of {from_wallet.name} changed from {from_wallet.balance} ", end="")
             from_wallet -= amount
+            print(f"to {from_wallet.balance}")
+            print(f"Balance of {to_wallet.name} changed from {to_wallet.balance} ", end="")
             to_wallet += amount
+            print(f"to {to_wallet.balance}")
 
     def total(self) -> str:
         """
@@ -187,8 +198,11 @@ class Account():
                 if not self.valid_number(amount) or amount > wallet.balance:
                     print('Error with the amount input, please try again.')
                 else:
+                    print(f"Wallet balance changed from {wallet.balance} ", end="")
                     wallet.balance -= amount
+                    print(f"to {wallet.balance}")
             else:
+                print(f"Wallet {wallet.name} balance {wallet.balance} set to 0")
                 wallet.balance = 0
 
     def set_percents(self) -> None:
@@ -219,7 +233,7 @@ class Account():
             
         self.calc_percents(wallets_dict)
 
-    def calc_percents(self, percents) -> None:
+    def calc_percents(self, percents: dict) -> None:
         """Calculates the main wallet percent and set all percents on wallets"""
         
         percents_sum = sum([percent for percent in percents.values()])
@@ -285,14 +299,15 @@ class Account():
         # transfer the calculated money to each wallet
         for name, part_money in wallets_part.items():
             wallet = self.get_wallet(name)
-            print(f'Depositing {part_money} to {name}')
+            print(f'Depositing {part_money} to {name} (${wallet.balance}). ', end="")
             wallet.balance += part_money
+            print(f"Now ${wallet.balance}")
             amount -= part_money
             self.correct_cap(wallet)
 
         # transfer the remaining amount of money to main
         main = self.get_wallet('main')
-        print(f'Depositing {amount} to main\n')
+        print(f'Depositing {amount} to main (${main.balance}). Now ${main.balance + amount}')
         main += amount
 
     def check_wallets(self) -> None:
@@ -318,7 +333,9 @@ class Account():
             return
         else:
             if self.valid_number(amount):
+                print(f"Wallet {wallet.name} from {wallet.balance} ", end="")
                 wallet += amount
+                print(f"to {wallet.balance}")
                 self.correct_cap(wallet)
             else:
                 print('Not a valid number format.')
@@ -344,6 +361,7 @@ class Account():
                 current_wallet.balance = balance
                 current_wallet.percent = percent
                 current_wallet.cap = cap
+                self.show(current_wallet.name)
         else:
             print(f"Wallet {wallet_name} couldn't be found.")
 
@@ -378,9 +396,9 @@ class Account():
                 total += wallet.balance
             else:
                 print(f"Wallet {name} couldn't be found. Please try again.")
-                return ""
+                return
         
-        return f"${total}" if total else ""
+        return f"${total}" if total else None
 
 
     def summary(self) -> None:
@@ -410,6 +428,7 @@ class Account():
             return
         
         if (wallet := self.get_wallet(wallet_name)) and not self.get_wallet(new_name):
+            print(f"Wallet {wallet.name} changed to {new_name}")
             wallet.name = new_name
         else:
             print(f"Error with wallet names, please try again!")
@@ -426,6 +445,8 @@ class Account():
             wallet = Wallet(**wallet_dict)
             self.wallets.append(wallet)
 
+        print("Account has been reset.")
+
     def set_cap(self, name: str, cap: int) -> None:
         """Set the cap attribute of a wallet given its name"""
 
@@ -438,6 +459,7 @@ class Account():
             return
 
         if wallet := self.get_wallet(name):
+            print(f"Wallet {name} cap of {wallet.cap} changed to {cap}")
             wallet.cap = cap
             self.correct_cap(wallet)
         else:
@@ -447,12 +469,14 @@ class Account():
         """Sets all wallets data to zero"""
         for wallet in self.wallets:
             wallet.percent = wallet.balance = wallet.cap = 0
+        print("All wallet values set to zero (0)")
 
     def clear(self, name: str) -> None:
         """Set all data of a given wallet to zero"""
         
         if wallet := self.get_wallet(name):
             wallet.balance = wallet.percent = wallet.cap = 0
+            print(f"Wallet {wallet.name} values set to zero (0).")
         else:
             print(f"Wallet {name} doesn't exist!")
 
