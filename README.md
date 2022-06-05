@@ -37,6 +37,8 @@ For example, `acc = Account()`
 
 ## Methods
 
+### Main features
+
 - `help()`: Display information about the available class methods. Example: `acc.help()`
 
 - `add_wallet(name, balance, percent, cap)`: Add a new wallet to your account. `name` is a `string`, while `balance`, `percent`, and `cap` are `int`s. Example: `acc.add_wallet('home', 150, 20, 30000)`
@@ -55,11 +57,21 @@ For example, `acc = Account()`
 
 - `set_percentages()`: Set the percentage attribute of each wallet. For example: `acc.set_percentages()`
 
-- `check_wallets()`: Prints all information aof all your wallets. Example: `acc.check_wallets()`
+- `set_cap(name: str, cap: int)`: Sets the *cap* attribute of a wallet given its *name*. Example: `acc.set_cap('savings', 50000)`
+
+- `rename(wallet_name: str, new_name: str)`: Renames an existing wallet. Can't rename your `main` wallet. Example: `acc.rename('savings', 'givings')`
+
+- `show(name: str)`: Displays all information about a single wallet given its *name*. Example: `acc.show('savings')`
+
+- `summary()`: Prints all important information about the account, like total money and wallet data.
 
 - `save()`: Save your changes. Example: `acc.save()`
 
 - `reset()`: Return to the last saved state of your account. Example: `acc.reset()`
+
+### Other features you might like to use
+
+- `check_wallets()`: Prints all information aof all your wallets. Example: `acc.check_wallets()`
 
 - `wipe()`: Deletes all wallets data in your account; you're left with an empty account with no wallets. Example: `acc.wipe()`
 
@@ -71,17 +83,9 @@ For example, `acc = Account()`
 
 - `non_usable()`: Prints the total amount of usable money you currenty have in savings wallets, that is, the money you should not use. Example: `acc.non_usable()`
 
-- `set_cap(name: str, cap: int)`: Sets the *cap* attribute of a wallet given its *name*. Example: `acc.set_cap('savings', 50000)`
+- `total_on(*names)`: Pass in as many wallet *names* (as strings) as you want and you get the total balance among all those wallets. Example: `acc.total_on('food', 'emergencies', 'savings')`
 
-- `rename(wallet_name: str, new_name: str)`: Renames an existing wallet. Can't rename your `main` wallet. Example: `acc.rename('savings', 'givings')`
-
-- `show(name: str)`: Displays all information about a single wallet given its *name*. Example: `acc.show('savings')`
-
-- `summary()`: Prints all important information about the account, like total money and wallet data.
-
-- `total_on(*)`:
-
-- `edit()`:
+- `edit(wallet_name: str, name: str, balance: int, percent: int, cap: int)`: Select an existing wallet given its *wallet name* and provide all the wallet data: *name, balance, percent, cap*. Example: `acc.edit('charity', 'givings', 400, 15, 15000)`
 
 ## Tips
 
