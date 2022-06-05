@@ -1,4 +1,3 @@
-import json
 import os
 from Account import Account
 from Wallet import Wallet
@@ -518,6 +517,19 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.emergencies.balance, 0)
         self.assertEqual(self.emergencies.percent, 0)
         self.assertEqual(self.emergencies.cap, 0)
+
+    def test_valid_total_on(self):
+        """Total on method working correctly"""
+        self.assertEqual(self.account.total_on('charity', 'emergencies'), '$700')
+        self.assertEqual(self.account.total_on('main', 'emergencies'), '$2000')
+
+    def test_invalid_total_on(self):
+        """Invalid names return empty string"""
+        self.assertEqual(self.account.total_on("main", "test"), "")
+
+    def test_empty_total_on(self):
+        """Empty total on names return empty string"""    
+        self.assertEqual(self.account.total_on(), "")
 
 
 if __name__ == '__main__':

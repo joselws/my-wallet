@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List
+from typing import List, Tuple
 from Wallet import Wallet
 import json
 import os
@@ -12,14 +12,15 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "test_wallet.json"
+        self.__wallet_name = "my_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'savings',
             'emergencies',
             'retirement',
             'travels',
-            'investing'
+            'investing',
+            'btc'
         ]
 
         self.__init_wallets_file()
@@ -339,6 +340,24 @@ class Account():
 
         non_usable_money = sum([wallet.balance for wallet in self.wallets if wallet.name in self.savings_wallets])
         return f'${non_usable_money}'
+
+    def total_on(self, *names: Tuple[str]) -> str:
+        """
+        Returns the sum of the balance of all specified wallets
+        
+        *names: n string wallet names
+        """
+
+        total = 0
+        for name in names:
+            if wallet := self.get_wallet(name):
+                total += wallet.balance
+            else:
+                print(f"Wallet {name} couldn't be found. Please try again.")
+                return ""
+        
+        return f"${total}" if total else ""
+
 
     def summary(self) -> None:
         """Prints all relevant information about your account"""
