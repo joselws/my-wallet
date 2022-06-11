@@ -1,2 +1,6 @@
 possible feature: status attribute with 'savings', 'active', 'blocked'
 transactions
+fixed_balance to json file
+saving_wallets to json file
+add/delete/edit fixed_balance data
+add/delete/edit savings_wallets data

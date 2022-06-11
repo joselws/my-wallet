@@ -23,6 +23,11 @@ class Account():
             'food',
             'internet'
         ]
+        self.fixed_balance: Dict[str:int] = {
+            "food": 100,
+            "sis": 200,
+            "internet": 100
+        }
 
         self.__init_wallets_file()
 
@@ -154,7 +159,7 @@ class Account():
             print(f"to {from_wallet.balance}")
             print(f"Balance of {to_wallet.name} changed from {to_wallet.balance} ", end="")
             to_wallet += amount
-            print(f"to {to_wallet.balance}")
+            print(f"to {to_wallet.balance}\n")
             self.correct_cap(to_wallet)
         
         # Transfer all the money if amount is None
@@ -308,8 +313,9 @@ class Account():
 
         # transfer the remaining amount of money to main
         main = self.get_wallet('main')
-        print(f'Depositing {amount} to main (${main.balance}). Now ${main.balance + amount}')
+        print(f'Depositing {amount} to main (${main.balance}). ', end="")
         main += amount
+        print(f"Now ${main.balance}\n")
 
     def check_wallets(self) -> None:
         """Show all information of all wallets"""
@@ -465,6 +471,15 @@ class Account():
             self.correct_cap(wallet)
         else:
             print('Wallet not found!')
+
+    def distribute_debts(self) -> None:
+        """Distribute fixed money from main to wallets in self.fixed_balance"""
+
+        for name, balance in self.fixed_balance.items():
+            if self.get_wallet(name):
+                self.transfer('main', name, balance)
+            else:
+                print(f"Skipping {name}. Wallet not found.")
 
     def clear_all(self) -> None:
         """Sets all wallets data to zero"""

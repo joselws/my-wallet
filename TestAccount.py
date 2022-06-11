@@ -593,6 +593,33 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.percent, 50)
         self.assertEqual(self.charity.cap, 1000)
 
+    def test_distribute_debts_success(self):
+        """Distribute debts work correctly"""
+        self.account.fixed_balance['test'] = 500
+        self.account.add_wallet('test')
+        test = self.account.get_wallet('test')
+
+        self.account.distribute_debts()
+        self.assertEqual(self.main.balance, 1000)
+        self.assertEqual(test.balance, 500)
+
+    def test_distribute_debts_fail_dict(self):
+        """Distribute debts doesn't work if not defined in fixed_balance"""
+        self.account.add_wallet('test')
+        test = self.account.get_wallet('test')
+
+        self.account.distribute_debts()
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(test.balance, 0)
+
+    def test_distribute_debts_fail_wallet(self):
+        """Distribute debts doesn't work if wallet doesn't exist"""
+        self.account.fixed_balance['test'] = 500
+
+        self.account.distribute_debts()
+        self.assertEqual(self.main.balance, 1500)
+        self.assertIsNone(self.account.get_wallet('test'))
+
 
 if __name__ == '__main__':
     unittest.main()
