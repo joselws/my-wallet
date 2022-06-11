@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from Wallet import Wallet
 import json
 import os
@@ -15,12 +15,13 @@ class Account():
         self.__wallet_name = "my_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
-            'savings',
             'emergencies',
             'retirement',
-            'travels',
             'investing',
-            'btc'
+            'btc',
+            'sis',
+            'food',
+            'internet'
         ]
 
         self.__init_wallets_file()
@@ -63,7 +64,6 @@ class Account():
         for wallet in self.wallets:
             if name == wallet.name:
                 return wallet
-        print(f'Wallet {name} not found. Try again.')
 
     def add_wallet(self, name: str, balance: int = 0, percent: int = 0, cap: int = 0) -> None:
         """
@@ -291,7 +291,8 @@ class Account():
         
         # calculate the respective amount of money to all wallets except main
         wallets_part = {}
-        for wallet in self.wallets:
+        wallets = [wallet for wallet in self.wallets if wallet.percent > 0]
+        for wallet in wallets:
             if wallet.name != 'main':
                 part = (amount * wallet.percent) // 100
                 wallets_part[wallet.name] = part
