@@ -210,6 +210,13 @@ class Account():
                 print(f"Wallet {wallet.name} balance {wallet.balance} set to 0")
                 wallet.balance = 0
 
+    def percents(self) -> None:
+        """Show existing percents of each wallet"""
+
+        for wallet in self.wallets:
+            if wallet.percent > 0:
+                print(f"{wallet.name}: {wallet.percent}%")
+
     def set_percents(self) -> None:
         """Show current wallets percents and prompts user to set them"""
 
