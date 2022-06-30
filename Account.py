@@ -186,16 +186,14 @@ class Account():
         Takes as arguments as many existing wallet names,
         returns the sum of all balances except those whose names were given
         """
-        print('##################')
         except_wallets = [self.get_wallet(wallet_name) for wallet_name in names]
-        print(except_wallets)
+        
         if any(wallet is None for wallet in except_wallets):
             print('One of the wallet names provided does not exist.')
             return None
         
         total = sum([wallet.balance for wallet in self.wallets if wallet not in except_wallets])
         return f"${total}"
-
 
     def save(self) -> None:
         """Save changes to json wallet file"""

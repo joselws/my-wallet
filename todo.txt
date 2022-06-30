@@ -4,3 +4,4 @@ fixed_balance to json file
 saving_wallets to json file
 add/delete/edit fixed_balance data
 add/delete/edit savings_wallets data
+merge wallets
