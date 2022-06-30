@@ -85,6 +85,8 @@ For example, `acc = Account()`
 
 - `total_on(*names)`: Pass in as many wallet *names* (as strings) as you want and you get the total balance among all those wallets. Example: `acc.total_on('food', 'emergencies', 'savings')`
 
+- `total_except(*names)`: Pass in as many wallet *names* (as strings) as you want and you get the total balance of all wallets *except* the ones you gave. Example: `acc.total_except('emergencies')`
+
 - `edit(wallet_name: str, name: str, balance: int, percent: int, cap: int)`: Select an existing wallet given its *wallet name* and provide all the wallet data: *name, balance, percent, cap*. Example: `acc.edit('charity', 'givings', 400, 15, 15000)`
 
 ## Tips
