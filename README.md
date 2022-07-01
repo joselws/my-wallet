@@ -2,7 +2,7 @@
 
 This is a Python program used to help you manage your personal finances. Have all the different wallets you need, so you can use them for different financial purposes. For example, you might want a wallet for ***savings*** and another one for ***home***.
 
-You manage one account object under any name, and you call methods of that account object to do all the functionalities providen in this program.
+You manage one account object under any name, and you call methods of that account object to do all the functionalities provided in this program.
 
 All your data is saved in a local JSON file that serves the purpose of a tiny database.
 
@@ -55,6 +55,8 @@ For example, `acc = Account()`
 
 - `total()`: Prints the *total* amount of money from all your wallets. Example: `acc.total()`
 
+- `percents()`: Prints the percent value of all wallets that have this attribute set at more than zero. Example: `acc.percents()`
+
 - `set_percentages()`: Set the percentage attribute of each wallet. For example: `acc.set_percentages()`
 
 - `set_cap(name: str, cap: int)`: Sets the *cap* attribute of a wallet given its *name*. Example: `acc.set_cap('savings', 50000)`
@@ -71,7 +73,7 @@ For example, `acc = Account()`
 
 ### Other features you might like to use
 
-- `check_wallets()`: Prints all information aof all your wallets. Example: `acc.check_wallets()`
+- `check_wallets()`: Prints all information of all your wallets. Example: `acc.check_wallets()`
 
 - `wipe()`: Deletes all wallets data in your account; you're left with an empty account with no wallets. Example: `acc.wipe()`
 
@@ -79,11 +81,13 @@ For example, `acc = Account()`
 
 - `clear(name: str)`: Sets all data of a given wallet to zero. Example: `acc.clear('emergencies')`
 
-- `usable()`: Prints the total amount of usable money you currenty have, that is, your total except the money on savings wallets. Example: `acc.usable()`
+- `usable()`: Prints the total amount of usable money you currenty have, that is, your total except the money on savings wallets. You cann add these saving wallets by their names by editing the `savings_wallets` list data attribute of the Account class. Example: `acc.usable()`
 
-- `non_usable()`: Prints the total amount of usable money you currenty have in savings wallets, that is, the money you should not use. Example: `acc.non_usable()`
+- `non_usable()`: Prints the total amount of usable money you currenty have in savings wallets, that is, the money you should not use. You cann add these saving wallets by their names by editing the `savings_wallets` list data attribute of the Account class. Example: `acc.non_usable()`
 
 - `total_on(*names)`: Pass in as many wallet *names* (as strings) as you want and you get the total balance among all those wallets. Example: `acc.total_on('food', 'emergencies', 'savings')`
+
+- `total_except(*names)`: Pass in as many wallet *names* (as strings) as you want and you get the total balance of all wallets *except* the ones you gave. Example: `acc.total_except('emergencies')`
 
 - `edit(wallet_name: str, name: str, balance: int, percent: int, cap: int)`: Select an existing wallet given its *wallet name* and provide all the wallet data: *name, balance, percent, cap*. Example: `acc.edit('charity', 'givings', 400, 15, 15000)`
 

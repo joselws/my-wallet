@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from Wallet import Wallet
 import json
 import os
@@ -15,13 +15,19 @@ class Account():
         self.__wallet_name = "my_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
-            'savings',
             'emergencies',
             'retirement',
-            'travels',
             'investing',
-            'btc'
+            'btc',
+            # 'sis',
+            # 'food',
+            'internet'
         ]
+        # self.fixed_balance: Dict[str:int] = {
+        #     "food": 100,
+        #     "sis": 200,
+        #     "internet": 100
+        # }
 
         self.__init_wallets_file()
 
@@ -63,7 +69,6 @@ class Account():
         for wallet in self.wallets:
             if name == wallet.name:
                 return wallet
-        print(f'Wallet {name} not found. Try again.')
 
     def add_wallet(self, name: str, balance: int = 0, percent: int = 0, cap: int = 0) -> None:
         """
@@ -154,7 +159,7 @@ class Account():
             print(f"to {from_wallet.balance}")
             print(f"Balance of {to_wallet.name} changed from {to_wallet.balance} ", end="")
             to_wallet += amount
-            print(f"to {to_wallet.balance}")
+            print(f"to {to_wallet.balance}\n")
             self.correct_cap(to_wallet)
         
         # Transfer all the money if amount is None
@@ -175,6 +180,20 @@ class Account():
 
         total = sum([wallet.balance for wallet in self.wallets])
         return f'${total}'
+
+    def total_except(self, *names: Tuple[str]) -> str:
+        """
+        Takes as arguments as many existing wallet names,
+        returns the sum of all balances except those whose names were given
+        """
+        except_wallets = [self.get_wallet(wallet_name) for wallet_name in names]
+        
+        if any(wallet is None for wallet in except_wallets):
+            print('One of the wallet names provided does not exist.')
+            return None
+        
+        total = sum([wallet.balance for wallet in self.wallets if wallet not in except_wallets])
+        return f"${total}"
 
     def save(self) -> None:
         """Save changes to json wallet file"""
@@ -204,6 +223,13 @@ class Account():
             else:
                 print(f"Wallet {wallet.name} balance {wallet.balance} set to 0")
                 wallet.balance = 0
+
+    def percents(self) -> None:
+        """Show existing percents of each wallet"""
+
+        for wallet in self.wallets:
+            if wallet.percent > 0:
+                print(f"{wallet.name}: {wallet.percent}%")
 
     def set_percents(self) -> None:
         """Show current wallets percents and prompts user to set them"""
@@ -291,7 +317,8 @@ class Account():
         
         # calculate the respective amount of money to all wallets except main
         wallets_part = {}
-        for wallet in self.wallets:
+        wallets = [wallet for wallet in self.wallets if wallet.percent > 0]
+        for wallet in wallets:
             if wallet.name != 'main':
                 part = (amount * wallet.percent) // 100
                 wallets_part[wallet.name] = part
@@ -307,8 +334,9 @@ class Account():
 
         # transfer the remaining amount of money to main
         main = self.get_wallet('main')
-        print(f'Depositing {amount} to main (${main.balance}). Now ${main.balance + amount}')
+        print(f'Depositing {amount} to main (${main.balance}). ', end="")
         main += amount
+        print(f"Now ${main.balance}\n")
 
     def check_wallets(self) -> None:
         """Show all information of all wallets"""
@@ -464,6 +492,15 @@ class Account():
             self.correct_cap(wallet)
         else:
             print('Wallet not found!')
+
+    def distribute_debts(self) -> None:
+        """Distribute fixed money from main to wallets in self.fixed_balance"""
+
+        for name, balance in self.fixed_balance.items():
+            if self.get_wallet(name):
+                self.transfer('main', name, balance)
+            else:
+                print(f"Skipping {name}. Wallet not found.")
 
     def clear_all(self) -> None:
         """Sets all wallets data to zero"""
