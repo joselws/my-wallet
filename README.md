@@ -55,6 +55,8 @@ For example, `acc = Account()`
 
 - `total()`: Prints the *total* amount of money from all your wallets. Example: `acc.total()`
 
+- `percents()`: Prints the percent value of all wallets that have this attribute set at more than zero. Example: `acc.percents()`
+
 - `set_percentages()`: Set the percentage attribute of each wallet. For example: `acc.set_percentages()`
 
 - `set_cap(name: str, cap: int)`: Sets the *cap* attribute of a wallet given its *name*. Example: `acc.set_cap('savings', 50000)`
