@@ -630,5 +630,33 @@ class TestAccount(unittest.TestCase):
 
         self.assertIsNone(self.account.total_except('emergencies', 'test'))
 
+    def test_merge_wallets(self):
+        """Merge method works correctly"""
+        
+        self.account.merge('emergencies', 'charity')
+
+        self.assertEqual(len(self.account), 2)
+        self.assertIsNone(self.account.get_wallet('charity'))
+        self.assertEqual(self.emergencies.name, 'emergencies')
+        self.assertEqual(self.emergencies.balance, 700)
+        self.assertEqual(self.emergencies.percent, 30)
+        self.assertEqual(self.emergencies.cap, 50000)
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.main.percent, 70)
+        self.assertEqual(self.main.cap, 0)
+
+    def test_merge_wallets_fail(self):
+        """Merge wallets doesn't work if a given wallet doesn't exist"""
+
+        self.account.merge('emergencies', 'test')
+
+        self.assertEqual(len(self.account), 3)
+        self.assertIsNone(self.account.get_wallet('test'))
+        self.assertEqual(self.emergencies.name, 'emergencies')
+        self.assertEqual(self.emergencies.balance, 500)
+        self.assertEqual(self.emergencies.percent, 20)
+        self.assertEqual(self.emergencies.cap, 50000)
+
+
 if __name__ == '__main__':
     unittest.main()

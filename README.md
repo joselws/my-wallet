@@ -91,6 +91,8 @@ For example, `acc = Account()`
 
 - `edit(wallet_name: str, name: str, balance: int, percent: int, cap: int)`: Select an existing wallet given its *wallet name* and provide all the wallet data: *name, balance, percent, cap*. Example: `acc.edit('charity', 'givings', 400, 15, 15000)`
 
+- `merge(wallet_one_name: str, wallet_two_name: str)`: Merge two existing wallets into one. The wallet remaining is the one defined first (`wallet_one_name`). Example: `acc.merge('charity', 'givings')`
+
 ## Tips
 
 - Use `acc.wallets` to print a quick summary of all your wallets.

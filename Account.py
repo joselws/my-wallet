@@ -12,22 +12,16 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',
             'retirement',
             'investing',
             'btc',
-            # 'sis',
-            # 'food',
-            'internet'
+            'internet',
+            'savings'
         ]
-        # self.fixed_balance: Dict[str:int] = {
-        #     "food": 100,
-        #     "sis": 200,
-        #     "internet": 100
-        # }
 
         self.__init_wallets_file()
 
@@ -493,15 +487,30 @@ class Account():
         else:
             print('Wallet not found!')
 
-    def distribute_debts(self) -> None:
-        """Distribute fixed money from main to wallets in self.fixed_balance"""
+    def merge(self, wallet_one_name: str, wallet_two_name: str) -> None:
+        """Combine wallet two into wallet one if both exist"""
 
-        for name, balance in self.fixed_balance.items():
-            if self.get_wallet(name):
-                self.transfer('main', name, balance)
-            else:
-                print(f"Skipping {name}. Wallet not found.")
+        wallet_one = self.get_wallet(wallet_one_name)
+        wallet_two = self.get_wallet(wallet_two_name)
 
+        if not wallet_one or not wallet_two:
+            print("Invalid operation. One or both of the wallets couldn't be found.")
+            return
+
+        print(f"Combining balance of {wallet_one.balance} to {wallet_two.balance}, now ", end="")
+        self.transfer(wallet_two_name, wallet_one_name)
+        print(wallet_one.balance)
+
+        print(f"Combining percent of {wallet_one.percent} to {wallet_two.percent}, now ", end="")
+        wallet_one.percent += wallet_two.percent
+        print(wallet_one.percent)
+
+        print(f"Combining cap of {wallet_one.cap} to {wallet_two.cap}, now ", end="")
+        wallet_one.cap += wallet_two.cap
+        print(wallet_one.cap)
+
+        self.delete_wallet(wallet_two_name)
+        
     def clear_all(self) -> None:
         """Sets all wallets data to zero"""
         for wallet in self.wallets:
