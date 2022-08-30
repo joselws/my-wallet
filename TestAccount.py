@@ -641,6 +641,9 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.emergencies.balance, 700)
         self.assertEqual(self.emergencies.percent, 30)
         self.assertEqual(self.emergencies.cap, 50000)
+        self.assertEqual(self.main.balance, 1500)
+        self.assertEqual(self.main.percent, 70)
+        self.assertEqual(self.main.cap, 0)
 
     def test_merge_wallets_fail(self):
         """Merge wallets doesn't work if a given wallet doesn't exist"""
