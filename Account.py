@@ -12,15 +12,16 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "test_wallet.json"
+        self.__wallet_name = "my_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',
-            'retirement',
+            'passport',
             'investing',
-            'btc',
+            'binance-btc',
             'internet',
-            'savings'
+            'dad',
+            'eli'
         ]
 
         self.__init_wallets_file()
@@ -497,17 +498,17 @@ class Account():
             print("Invalid operation. One or both of the wallets couldn't be found.")
             return
 
-        print(f"Combining balance of {wallet_one.balance} to {wallet_two.balance}, now ", end="")
-        self.transfer(wallet_two_name, wallet_one_name)
-        print(wallet_one.balance)
-
         print(f"Combining percent of {wallet_one.percent} to {wallet_two.percent}, now ", end="")
         wallet_one.percent += wallet_two.percent
         print(wallet_one.percent)
 
         print(f"Combining cap of {wallet_one.cap} to {wallet_two.cap}, now ", end="")
-        wallet_one.cap += wallet_two.cap
+        self.set_cap(wallet_one_name, wallet_one.cap + wallet_two.cap)
         print(wallet_one.cap)
+
+        print(f"Combining balance of {wallet_one.balance} to {wallet_two.balance}, now ", end="")
+        self.transfer(wallet_two_name, wallet_one_name)
+        print(wallet_one.balance)
 
         self.delete_wallet(wallet_two_name)
         

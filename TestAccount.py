@@ -659,4 +659,8 @@ class TestAccount(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    acc = Account()
+    if acc.get_wallet_name() == "test_wallet.json":
+        unittest.main()
+    else:
+        print("You're not using your test wallet!")
