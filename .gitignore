@@ -1,2 +1,5 @@
 my_wallet.json
 .DS_Store
+__pycache__/*
+.mypy_cache/*
+transactions.csv

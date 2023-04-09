@@ -1,7 +1,9 @@
 import os
+import unittest
+from unittest.mock import patch, Mock
+
 from Account import Account
 from Wallet import Wallet
-import unittest
 
 
 class TestAccount(unittest.TestCase):
@@ -10,13 +12,18 @@ class TestAccount(unittest.TestCase):
     to test_wallet.json, there is all the test data located
     """
 
+    date_string = "12-06-1995 00:00:00"
+
     def setUp(self):
         self.account = Account()
         self.main = self.account.get_wallet('main')
         self.emergencies = self.account.get_wallet('emergencies')
         self.charity = self.account.get_wallet('charity')
         self.savings_wallets = ['savings', 'emergencies', 'investing', 'travels', 'retirement']
-
+        
+        with open("transactions.csv", "w") as file:
+            transaction_headers = "date,wallet,amount,description,balance_before,balance_after\n"
+            file.write(transaction_headers)
 
     def test_account_correctly_created(self):
         """Test that the account was correctly created"""
@@ -593,33 +600,6 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.percent, 50)
         self.assertEqual(self.charity.cap, 1000)
 
-    # def test_distribute_debts_success(self):
-    #     """Distribute debts work correctly"""
-    #     self.account.fixed_balance['test'] = 500
-    #     self.account.add_wallet('test')
-    #     test = self.account.get_wallet('test')
-
-    #     self.account.distribute_debts()
-    #     self.assertEqual(self.main.balance, 1000)
-    #     self.assertEqual(test.balance, 500)
-
-    # def test_distribute_debts_fail_dict(self):
-    #     """Distribute debts doesn't work if not defined in fixed_balance"""
-    #     self.account.add_wallet('test')
-    #     test = self.account.get_wallet('test')
-
-    #     self.account.distribute_debts()
-    #     self.assertEqual(self.main.balance, 1500)
-    #     self.assertEqual(test.balance, 0)
-
-    # def test_distribute_debts_fail_wallet(self):
-    #     """Distribute debts doesn't work if wallet doesn't exist"""
-    #     self.account.fixed_balance['test'] = 500
-
-    #     self.account.distribute_debts()
-    #     self.assertEqual(self.main.balance, 1500)
-    #     self.assertIsNone(self.account.get_wallet('test'))
-
     def test_total_except(self):
         """total_except method works correctly"""
 
@@ -656,6 +636,66 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.emergencies.balance, 500)
         self.assertEqual(self.emergencies.percent, 20)
         self.assertEqual(self.emergencies.cap, 50000)
+    
+    @patch("Account.datetime")
+    def test_deduct_records_transaction(self, mock_datetime):
+        """Deduct method records the transaction in the file"""
+        mock_datetime.strftime = Mock(return_value=self.date_string)
+        self.account.deduct("main", 500, "test transaction")
+        expected_output = f"{self.date_string},main,500,test transaction,1500,1000\n"
+
+        with open("transactions.csv", "r") as file:
+            transaction = file.readlines()[1]
+
+        self.assertEquals(transaction, expected_output)
+
+    @patch("Account.datetime")
+    def test_deduct_records_transaction_no_description(self, mock_datetime):
+        """Deduct method records the transaction in the file"""
+        mock_datetime.strftime = Mock(return_value=self.date_string)
+        self.account.deduct("main", 500)
+        expected_output = f"{self.date_string},main,500,no_description,1500,1000\n"
+
+        with open("transactions.csv", "r") as file:
+            transaction = file.readlines()[1]
+
+        self.assertEquals(transaction, expected_output)
+
+    @patch("Account.datetime")
+    def test_deduct_records_transaction_no_amount(self, mock_datetime):
+        """Deduct method records the transaction in the file"""
+        mock_datetime.strftime = Mock(return_value=self.date_string)
+        self.account.deduct("main")
+        expected_output = f"{self.date_string},main,1500,no_description,1500,0\n"
+
+        with open("transactions.csv", "r") as file:
+            transaction = file.readlines()[1]
+
+        self.assertEquals(transaction, expected_output)
+
+    @patch("Account.datetime")
+    def test_deduct_records_transaction_many(self, mock_datetime):
+        """Deduct method records the transaction in the file"""
+        mock_datetime.strftime = Mock(return_value=self.date_string)
+        self.account.deduct("main", 500, "test transaction")
+        self.account.deduct("emergencies", 300, "another test transaction")
+        expected_output1 = f"{self.date_string},main,500,test transaction,1500,1000\n"
+        expected_output2 = f"{self.date_string},emergencies,300,another test transaction,500,200\n"
+
+        with open("transactions.csv", "r") as file:
+            transactions = file.readlines()
+            transaction1 = transactions[1]
+            transaction2 = transactions[2]
+
+        self.assertEquals(transaction1, expected_output1)
+        self.assertEquals(transaction2, expected_output2)
+
+    def test_deduct_records_transaction_invalid_wallet(self):
+        """Deduct method records the transaction in the file"""
+        self.account.deduct("invalid_wallet_name")
+        with open("transactions.csv", "r") as file:
+            with self.assertRaises(IndexError):
+                file.readlines()[1]
 
 
 if __name__ == '__main__':
