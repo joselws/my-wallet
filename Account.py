@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List, Tuple, Dict
 from Wallet import Wallet
+from datetime import datetime
 import json
 import os
 
@@ -12,7 +13,7 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "my_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',
@@ -196,7 +197,7 @@ class Account():
             file.write(wallets_json)
             print('Saved Changes.')
 
-    def deduct(self, name: str, amount: int = None):
+    def deduct(self, name: str, amount: int = None, description: str = None):
         """
         Deduct the desired amount of money from a wallet
         """
@@ -210,12 +211,34 @@ class Account():
                 if not self.valid_number(amount) or amount > wallet.balance:
                     print('Error with the amount input, please try again.')
                 else:
+                    self._record_deduct_transaction(name, amount, description)
                     print(f"Wallet balance changed from {wallet.balance} ", end="")
                     wallet.balance -= amount
                     print(f"to {wallet.balance}")
             else:
                 print(f"Wallet {wallet.name} balance {wallet.balance} set to 0")
+                self._record_deduct_transaction(name, amount, description)
                 wallet.balance = 0
+
+    def _record_deduct_transaction(self, name: str, amount: int = None, description: str = None):
+        """
+        Records the deduct transaction in the transactions.csv file
+        """
+
+        if not description:
+            description = "no_description"
+        
+        date = datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S")
+        wallet = self.get_wallet(name)
+        balance_before = wallet.balance
+        if amount:
+            balance_after = balance_before - amount
+        else:
+            amount = balance_before
+            balance_after = 0
+
+        with open("transactions.csv", "a") as file:
+            file.write(f"{date},{name},{amount},{description},{balance_before},{balance_after}\n")
 
     def percents(self) -> None:
         """Show existing percents of each wallet"""
