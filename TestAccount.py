@@ -22,7 +22,7 @@ class TestAccount(unittest.TestCase):
         self.savings_wallets = ['savings', 'emergencies', 'investing', 'travels', 'retirement']
         
         with open("transactions.csv", "w") as file:
-            transaction_headers = "date,wallet,amount,description,balance_before,balance_after\n"
+            transaction_headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
             file.write(transaction_headers)
 
     def test_account_correctly_created(self):
@@ -642,7 +642,7 @@ class TestAccount(unittest.TestCase):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main", 500, "test transaction")
-        expected_output = f"{self.date_string},main,500,test transaction,1500,1000\n"
+        expected_output = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
 
         with open("transactions.csv", "r") as file:
             transaction = file.readlines()[1]
@@ -654,7 +654,7 @@ class TestAccount(unittest.TestCase):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main", 500)
-        expected_output = f"{self.date_string},main,500,no_description,1500,1000\n"
+        expected_output = f"{self.date_string},main,deduction,500,no_description,1500,1000\n"
 
         with open("transactions.csv", "r") as file:
             transaction = file.readlines()[1]
@@ -666,7 +666,7 @@ class TestAccount(unittest.TestCase):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main")
-        expected_output = f"{self.date_string},main,1500,no_description,1500,0\n"
+        expected_output = f"{self.date_string},main,deduction,1500,no_description,1500,0\n"
 
         with open("transactions.csv", "r") as file:
             transaction = file.readlines()[1]
@@ -679,8 +679,8 @@ class TestAccount(unittest.TestCase):
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main", 500, "test transaction")
         self.account.deduct("emergencies", 300, "another test transaction")
-        expected_output1 = f"{self.date_string},main,500,test transaction,1500,1000\n"
-        expected_output2 = f"{self.date_string},emergencies,300,another test transaction,500,200\n"
+        expected_output1 = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
+        expected_output2 = f"{self.date_string},emergencies,deduction,300,another test transaction,500,200\n"
 
         with open("transactions.csv", "r") as file:
             transactions = file.readlines()

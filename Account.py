@@ -24,6 +24,7 @@ class Account():
         ]
 
         self.__init_wallets_file()
+        self.__init_transactions_file()
 
 
     def get_wallet_name(self) -> str:
@@ -48,12 +49,23 @@ class Account():
                     for wallet_dict in wallets:
                         wallet = Wallet(**wallet_dict)
                         self.wallets.append(wallet)
-        
         else:
             self.add_wallet('main')
             with open(self.__wallet_name, 'w') as file:
                 self.save()
                 print('Wallet created.')
+
+    def __init_transactions_file(self):
+        """
+        Make sure to create the transactions.csv file with its proper headers
+        if it doesn't exist
+        """
+
+        if not os.path.exists("transactions.csv"):
+            headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
+            with open("transactions.csv", "w") as file:
+                file.write(headers)
+        
 
     def get_wallet(self, name: str) -> Wallet:
         """
@@ -231,6 +243,7 @@ class Account():
         date = datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S")
         wallet = self.get_wallet(name)
         balance_before = wallet.balance
+        transaction_type = "deduction"
         if amount:
             balance_after = balance_before - amount
         else:
@@ -238,7 +251,7 @@ class Account():
             balance_after = 0
 
         with open("transactions.csv", "a") as file:
-            file.write(f"{date},{name},{amount},{description},{balance_before},{balance_after}\n")
+            file.write(f"{date},{name},{transaction_type},{amount},{description},{balance_before},{balance_after}\n")
 
     def percents(self) -> None:
         """Show existing percents of each wallet"""
