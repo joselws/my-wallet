@@ -16,12 +16,10 @@ class Account():
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',
-            'passport',
+            'savings',
             'investing',
             'binance-btc',
-            'internet',
-            'dad',
-            'eli'
+            'travels',
         ]
 
         self.__init_wallets_file()

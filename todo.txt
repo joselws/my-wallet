@@ -1,6 +1,11 @@
-possible feature: status attribute with 'savings', 'active', 'blocked'
+wallet_type: "savings", "regular", "debts", "main", "lends"
+total_type(wallet_type) method which shows the total balance on each wallet type
+location attribute for wallet (e.g. cash, bank)
+total_location() total by location
+stats() prints all total_type, grand_total, and number of wallets
+prettify summary information with tabulate library
+deposit() profile for different money allocation percents
+deposit() profile-brackets for customizing different deposit profiles according to incoming money
+show wallets by type
 transactions
-saving_wallets to json file
-add/delete/edit savings_wallets data
-merge wallets
 multiple currencies
