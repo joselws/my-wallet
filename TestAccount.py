@@ -21,7 +21,7 @@ class TestAccount(unittest.TestCase):
         self.charity = self.account.get_wallet('charity')
         self.savings_wallets = ['savings', 'emergencies', 'investing', 'travels', 'retirement']
         
-        with open("transactions.csv", "w") as file:
+        with open(self.account.get_transactions_file_name(), "w") as file:
             transaction_headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
             file.write(transaction_headers)
 
@@ -644,10 +644,10 @@ class TestAccount(unittest.TestCase):
         self.account.deduct("main", 500, "test transaction")
         expected_output = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
 
-        with open("transactions.csv", "r") as file:
+        with open(self.account.get_transactions_file_name(), "r") as file:
             transaction = file.readlines()[1]
 
-        self.assertEquals(transaction, expected_output)
+        self.assertEqual(transaction, expected_output)
 
     @patch("Account.datetime")
     def test_deduct_records_transaction_no_description(self, mock_datetime):
@@ -656,10 +656,10 @@ class TestAccount(unittest.TestCase):
         self.account.deduct("main", 500)
         expected_output = f"{self.date_string},main,deduction,500,no_description,1500,1000\n"
 
-        with open("transactions.csv", "r") as file:
+        with open(self.account.get_transactions_file_name(), "r") as file:
             transaction = file.readlines()[1]
 
-        self.assertEquals(transaction, expected_output)
+        self.assertEqual(transaction, expected_output)
 
     @patch("Account.datetime")
     def test_deduct_records_transaction_no_amount(self, mock_datetime):
@@ -668,10 +668,10 @@ class TestAccount(unittest.TestCase):
         self.account.deduct("main")
         expected_output = f"{self.date_string},main,deduction,1500,no_description,1500,0\n"
 
-        with open("transactions.csv", "r") as file:
+        with open(self.account.get_transactions_file_name(), "r") as file:
             transaction = file.readlines()[1]
 
-        self.assertEquals(transaction, expected_output)
+        self.assertEqual(transaction, expected_output)
 
     @patch("Account.datetime")
     def test_deduct_records_transaction_many(self, mock_datetime):
@@ -682,25 +682,31 @@ class TestAccount(unittest.TestCase):
         expected_output1 = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
         expected_output2 = f"{self.date_string},emergencies,deduction,300,another test transaction,500,200\n"
 
-        with open("transactions.csv", "r") as file:
+        with open(self.account.get_transactions_file_name(), "r") as file:
             transactions = file.readlines()
             transaction1 = transactions[1]
             transaction2 = transactions[2]
 
-        self.assertEquals(transaction1, expected_output1)
-        self.assertEquals(transaction2, expected_output2)
+        self.assertEqual(transaction1, expected_output1)
+        self.assertEqual(transaction2, expected_output2)
 
     def test_deduct_records_transaction_invalid_wallet(self):
         """Deduct method records the transaction in the file"""
         self.account.deduct("invalid_wallet_name")
-        with open("transactions.csv", "r") as file:
+        with open(self.account.get_transactions_file_name(), "r") as file:
             with self.assertRaises(IndexError):
                 file.readlines()[1]
+
+    def test_get_transactions_file_name(self):
+        self.assertEqual(self.account.get_transactions_file_name(), "test_transactions.csv")
 
 
 if __name__ == '__main__':
     acc = Account()
-    if acc.get_wallet_name() == "test_wallet.json":
-        unittest.main()
+    if (
+        acc.get_wallet_name() == "test_wallet.json"
+        and acc.get_transactions_file_name() == "test_transactions.csv"
+    ):
+        unittest.main(buffer=True)
     else:
-        print("You're not using your test wallet!")
+        print("You're not using your test wallet or test transactions!")

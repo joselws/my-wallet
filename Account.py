@@ -14,6 +14,7 @@ class Account():
 
     def __init__(self):
         self.__wallet_name = "my_wallet.json"
+        self.__transactions_name = "transactions.csv"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',
@@ -30,6 +31,10 @@ class Account():
     def get_wallet_name(self) -> str:
         """Returns the name of the wallet JSON file"""
         return self.__wallet_name
+    
+    def get_transactions_file_name(self) -> str:
+        """Returns the name of the transactions csv file"""
+        return self.__transactions_name
     
     def __init_wallets_file(self) -> None:
         """
@@ -61,9 +66,9 @@ class Account():
         if it doesn't exist
         """
 
-        if not os.path.exists("transactions.csv"):
+        if not os.path.exists(self.get_transactions_file_name()):
             headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
-            with open("transactions.csv", "w") as file:
+            with open(self.get_transactions_file_name(), "w") as file:
                 file.write(headers)
         
 
@@ -250,7 +255,7 @@ class Account():
             amount = balance_before
             balance_after = 0
 
-        with open("transactions.csv", "a") as file:
+        with open(self.get_transactions_file_name(), "a") as file:
             file.write(f"{date},{name},{transaction_type},{amount},{description},{balance_before},{balance_after}\n")
 
     def percents(self) -> None:
