@@ -34,6 +34,25 @@ class TestAccount(unittest.TestCase):
         new_acc = Account()
         self.assertTrue(os.path.exists(self.account.get_wallet_name()))
 
+    def test_transactions_file_correctly_created(self):
+        os.remove("transactions.csv")
+        self.assertFalse(os.path.exists("transactions.csv"))
+
+        new_acc = Account()
+        self.assertTrue(os.path.exists("transactions.csv"))
+
+    def test_transactions_file_has_right_headers(self):
+        os.remove("transactions.csv")
+        new_acc = Account()
+        headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
+        with open("transactions.csv", "r") as file:
+            contents = file.read()
+        self.assertEqual(contents, headers)
+
     
 if __name__ == '__main__':
-    unittest.main()
+    acc = Account()
+    if acc.get_wallet_name() == "test_empty_wallet.json":
+        unittest.main()
+    else:
+        print("You're not using your test empty wallet!")
