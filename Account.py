@@ -214,7 +214,7 @@ class Account():
             file.write(wallets_json)
             print('Saved Changes.')
 
-    def deduct(self, name: str, amount: int = None, description: str = None):
+    def deduct(self, name: str, description: str = None, amount: int = None):
         """
         Deduct the desired amount of money from a wallet
         """
