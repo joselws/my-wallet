@@ -224,28 +224,28 @@ class TestAccount(unittest.TestCase):
 
     def test_deduct(self):
         """Deduct method correctly working"""
-        self.account.deduct('main', 500)
+        self.account.deduct('main', "test", 500)
         self.assertEqual(self.main.balance, 1000)
 
     def test_deduct_surpass_amount(self):
         """Cant deduct money that surpasses wallet balance"""
-        self.account.deduct('charity', 1000)
+        self.account.deduct('charity', "test", 1000)
         self.assertEqual(self.charity.balance, 200)
 
     def test_deduct_nonexisting_wallet(self):
         """operations with nonexisting wallet dont carry out"""
-        self.account.deduct('no_wallet', 200)
+        self.account.deduct('no_wallet', "test", 200)
         self.assertIsNone(self.account.get_wallet('no_wallet'))
         self.assertEqual(len(self.account), 3)
 
     def test_deduct_invalid_amount(self):
         """Cant deduct invalid amount number format"""
-        self.account.deduct('charity', 'hi')
+        self.account.deduct('charity', 'test', 'hi')
         self.assertEqual(self.charity.balance, 200)
 
     def test_deduct_default(self):
         """when no amount is given, it deducts all wallet money"""
-        self.account.deduct('emergencies')
+        self.account.deduct('emergencies', "test")
         self.assertEqual(self.emergencies.balance, 0)
 
     def test_deposit(self):
@@ -641,7 +641,7 @@ class TestAccount(unittest.TestCase):
     def test_deduct_records_transaction(self, mock_datetime):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
-        self.account.deduct("main", 500, "test transaction")
+        self.account.deduct("main", "test transaction", 500)
         expected_output = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
 
         with open(self.account.get_transactions_file_name(), "r") as file:
@@ -650,11 +650,11 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(transaction, expected_output)
 
     @patch("Account.datetime")
-    def test_deduct_records_transaction_no_description(self, mock_datetime):
+    def test_deduct_records_transaction_no_amount(self, mock_datetime):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
-        self.account.deduct("main", 500)
-        expected_output = f"{self.date_string},main,deduction,500,no_description,1500,1000\n"
+        self.account.deduct("main", "test transaction")
+        expected_output = f"{self.date_string},main,deduction,1500,test transaction,1500,0\n"
 
         with open(self.account.get_transactions_file_name(), "r") as file:
             transaction = file.readlines()[1]
@@ -662,7 +662,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(transaction, expected_output)
 
     @patch("Account.datetime")
-    def test_deduct_records_transaction_no_amount(self, mock_datetime):
+    def test_deduct_records_transaction_no_amount_no_description(self, mock_datetime):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main")
@@ -677,8 +677,8 @@ class TestAccount(unittest.TestCase):
     def test_deduct_records_transaction_many(self, mock_datetime):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
-        self.account.deduct("main", 500, "test transaction")
-        self.account.deduct("emergencies", 300, "another test transaction")
+        self.account.deduct("main", "test transaction", 500)
+        self.account.deduct("emergencies", "another test transaction", 300)
         expected_output1 = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
         expected_output2 = f"{self.date_string},emergencies,deduction,300,another test transaction,500,200\n"
 

@@ -13,7 +13,7 @@ class Account():
     """
 
     def __init__(self):
-        self.__wallet_name = "test_empty_wallet.json"
+        self.__wallet_name = "test_wallet.json"
         self.__transactions_name = "test_transactions.csv"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
@@ -214,7 +214,7 @@ class Account():
             file.write(wallets_json)
             print('Saved Changes.')
 
-    def deduct(self, name: str, amount: int = None, description: str = None):
+    def deduct(self, name: str, description: str = None, amount: int = None):
         """
         Deduct the desired amount of money from a wallet
         """
