@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, Tuple
 from Wallet import Wallet
 from datetime import datetime
+from Transaction import TransactionHistory, TransactionType
 import json
 import os
 

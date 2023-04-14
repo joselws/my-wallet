@@ -1,12 +1,12 @@
 import unittest
-from Transaction import DeductTransaction, TransferTransaction, TransactionType
+from Transaction import Transaction, TransferTransaction, TransactionType
 from datetime import datetime
 
 
 class TestDeductTransaction(unittest.TestCase):
 
     def test_deduct_transaction_correctly_created(self):
-        transaction = DeductTransaction(
+        transaction = Transaction(
             date=datetime(1995, 6, 12, 0, 0, 0),
             wallet="main",
             transaction_type=TransactionType.DEDUCTION.value,

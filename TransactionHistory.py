@@ -1,13 +1,15 @@
 from datetime import datetime
-from Transaction import Transaction
+from Transaction import Transaction, TransactionType
 import csv
 
 
 class TransactionHistory:
     
+    # class attributes
+    transactions_filename = "transactions.csv"
+
     def __init__(self):
         self.transactions = []
-        self.transactions_filename = "transactions.csv"
         self.date_format = "%d-%m-%Y %H:%M:%S"
         self.headers = [
             "date",
@@ -74,3 +76,19 @@ class TransactionHistory:
             return None
         else:
             return transaction
+        
+    @classmethod
+    def insert_new_transaction(
+        cls,
+        # date: datetime,
+        wallet: str,
+        transaction_type: TransactionType,
+        amount: int,
+        description: str,
+        balance_before: int,
+        balance_after: int
+    ) -> bool:
+        
+        date = datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S")
+        with open(cls.transactions_filename(), "a") as file:
+            file.write(f"{date},{wallet},{transaction_type},{amount},{description},{balance_before},{balance_after}\n")

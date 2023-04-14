@@ -9,7 +9,7 @@ class TransactionType(Enum):
 
 
 @dataclass(frozen=True)
-class DeductTransaction:
+class Transaction:
     date: datetime
     wallet: str
     transaction_type: TransactionType.DEDUCTION
