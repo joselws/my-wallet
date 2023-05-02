@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch, Mock
 
 from Account import Account
+from TransactionHistory import TransactionHistory
 from Wallet import Wallet
 
 
@@ -705,7 +706,7 @@ if __name__ == '__main__':
     acc = Account()
     if (
         acc.get_wallet_name() == "test_wallet.json"
-        and acc.get_transactions_file_name() == "test_transactions.csv"
+        and TransactionHistory.transactions_filename == "test_transactions.csv"
     ):
         unittest.main(buffer=True)
     else:
