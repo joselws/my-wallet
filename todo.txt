@@ -9,7 +9,9 @@ deposit() profile for different money allocation not in percents but in a finite
 deposit() profile-brackets for customizing different deposit profiles according to incoming money
 show wallets by type
 multiple currencies
+
 TransactionHistory class
+AccountTransactionHandler class
 
 move Account.__init_transactions_file to TransactionHistory
 move transactions related functionalities to TransactionHistory class
