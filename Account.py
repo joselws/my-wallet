@@ -14,9 +14,12 @@ class Account():
     all the wallets for an owner. 
     """
 
-    def __init__(self):
-        self.__wallet_name = "test_wallet.json"
-        self.__transactions_name = "test_transactions.csv"
+    def __init__(self, wallet_name: str = "my_wallet.json"):
+        self.__wallet_name = wallet_name
+        if wallet_name in ["test_wallet.json", "test_empty_wallet.json"]:
+            self.__transactions_name = "test_transactions.csv"
+        else:
+            self.__transactions_name = "transactions.csv"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',

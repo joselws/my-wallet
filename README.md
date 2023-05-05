@@ -28,10 +28,10 @@ Each wallet has 4 data attributes:
 
 ```
 >>> from Account import Account
->>> <your_account_object> = Account()
+>>> <your_account_object> = Account("<name_of_your_wallet.json>")
 ```
 
-For example, `acc = Account()`
+For example, `acc = Account("my_wallets.json")`
 
 5. Use the `help()` function or the `help()` method on the Account object if you need a quick overview of the commands in-session. For example, `help(acc)` or `acc.help()`
 

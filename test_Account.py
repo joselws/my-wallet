@@ -16,7 +16,7 @@ class TestAccount(unittest.TestCase):
     date_string = "12-06-1995 00:00:00"
 
     def setUp(self):
-        self.account = Account()
+        self.account = Account("test_wallet.json")
         self.main = self.account.get_wallet('main')
         self.emergencies = self.account.get_wallet('emergencies')
         self.charity = self.account.get_wallet('charity')
@@ -120,7 +120,7 @@ class TestAccount(unittest.TestCase):
 
     def test_correct_percent_below_100(self):
         """percent sum below 100 return false"""
-        test_account = Account()
+        test_account = Account("test_wallet.json")
         test_account.wallets.clear()
         test_account.add_wallet('new1', 100, 20)
         test_account.add_wallet('new2', 100)
@@ -130,7 +130,7 @@ class TestAccount(unittest.TestCase):
 
     def test_correct_percent_zero(self):
         """zero percent sum return false"""
-        test_account2 = Account()
+        test_account2 = Account("test_wallet.json")
         test_account2.wallets.clear()
         test_account2.add_wallet('new5')
         test_account2.add_wallet('new6')
@@ -204,7 +204,7 @@ class TestAccount(unittest.TestCase):
         self.account.save()
 
         # read json file and confirm new wallet values
-        account = Account()
+        account = Account("test_wallet.json")
         test = account.get_wallet('test')
         self.assertEqual(len(account.wallets), 4)
         self.assertEqual(test.name, 'test')
@@ -219,7 +219,7 @@ class TestAccount(unittest.TestCase):
         account.save()
 
         # read json file and confirm new wallet was deleted
-        account = Account()
+        account = Account("test_wallet.json")
         self.assertEqual(len(account.wallets), 3)
         self.assertIsNone(account.get_wallet('test'))
 
@@ -298,7 +298,7 @@ class TestAccount(unittest.TestCase):
 
     def test_reset(self):
         """Load function works properly"""
-        acc = Account()
+        acc = Account("test_wallet.json")
         acc.add_wallet('test')
         
         acc.reset()
@@ -703,7 +703,7 @@ class TestAccount(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    acc = Account()
+    acc = Account("test_wallet.json")
     if (
         acc.get_wallet_name() == "test_wallet.json"
         and TransactionHistory.transactions_filename == "test_transactions.csv"
