@@ -12,6 +12,7 @@ multiple currencies
 
 TransactionHistory class
 AccountTransactionHandler class
+    queue deduct transactions in a list until save() is called
 
 move Account.__init_transactions_file to TransactionHistory
 move transactions related functionalities to TransactionHistory class
