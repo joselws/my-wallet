@@ -77,17 +77,3 @@ class TransactionHistory:
         else:
             return transaction
         
-    @classmethod
-    def insert_new_transaction(
-        cls,
-        date: datetime,
-        wallet: str,
-        transaction_type: TransactionType,
-        amount: int,
-        balance_before: int,
-        balance_after: int,
-        description: str = "no_description"
-    ) -> bool:
-        
-        with open(cls.transactions_filename, "a") as file:
-            file.write(f"{date},{wallet},{transaction_type},{amount},{description},{balance_before},{balance_after}\n")

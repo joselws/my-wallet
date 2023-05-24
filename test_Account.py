@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch, Mock
 
 from Account import Account
-from TransactionHistory import TransactionHistory
+from AccountTransactionHandler import AccountTransactionHandler
 from Wallet import Wallet
 
 
@@ -21,6 +21,7 @@ class TestAccount(unittest.TestCase):
         self.emergencies = self.account.get_wallet('emergencies')
         self.charity = self.account.get_wallet('charity')
         self.savings_wallets = ['savings', 'emergencies', 'investing', 'travels', 'retirement']
+        AccountTransactionHandler._empty_queued_transactions()
         
         with open(self.account.get_transactions_file_name(), "w") as file:
             transaction_headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
@@ -223,6 +224,27 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(len(account.wallets), 3)
         self.assertIsNone(account.get_wallet('test'))
 
+    @patch("Account.datetime")
+    def test_save_triggers_insert_transaction(self, mock_datetime):
+        """Save method correctly saves changes into JSON file"""
+        mock_datetime.strftime.return_value = self.date_string
+        # Save a new wallet to json file
+        self.account.deduct('main', "test_deduct", 100)
+        entry = f"{self.date_string},main,deduction,100,test_deduct,1500,1400\n"
+        self.assertEqual(len(AccountTransactionHandler._transactions), 1)
+        self.assertEqual(AccountTransactionHandler._transactions[0], entry)
+        
+        self.account.save()
+        self.assertListEqual(AccountTransactionHandler._transactions, [])
+
+        # read json file and confirm new wallet values
+        with open(self.account.get_transactions_file_name(), "r") as file:
+            rows = file.readlines()
+            self.assertEqual(rows[1], entry)
+
+        self.account.add("main", 100)
+        self.account.save()
+
     def test_deduct(self):
         """Deduct method correctly working"""
         self.account.deduct('main', "test", 500)
@@ -321,6 +343,15 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(charity.balance, 200)
         self.assertEqual(charity.percent, 10)
         self.assertFalse(charity.cap)
+
+    def test_reset_triggers_empty_queued_transactions(self):
+        """Load function works properly"""
+        acc = Account("test_wallet.json")
+        acc.deduct('main', "test deduction", 100)
+        self.assertEqual(len(AccountTransactionHandler._transactions), 1)
+        
+        acc.reset()
+        self.assertEqual(len(AccountTransactionHandler._transactions), 0)
 
     def test_calc_percents_main_percent(self):
         """The main percent is correctly calculated"""
@@ -641,12 +672,11 @@ class TestAccount(unittest.TestCase):
     @patch("Account.datetime")
     def test_deduct_records_transaction(self, mock_datetime):
         """Deduct method records the transaction in the file"""
-        mock_datetime.strftime = Mock(return_value=self.date_string)
+        mock_datetime.strftime.return_value = self.date_string
         self.account.deduct("main", "test transaction", 500)
         expected_output = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
 
-        with open(self.account.get_transactions_file_name(), "r") as file:
-            transaction = file.readlines()[1]
+        transaction = AccountTransactionHandler._transactions[0]
 
         self.assertEqual(transaction, expected_output)
 
@@ -657,8 +687,7 @@ class TestAccount(unittest.TestCase):
         self.account.deduct("main", "test transaction")
         expected_output = f"{self.date_string},main,deduction,1500,test transaction,1500,0\n"
 
-        with open(self.account.get_transactions_file_name(), "r") as file:
-            transaction = file.readlines()[1]
+        transaction = AccountTransactionHandler._transactions[0]
 
         self.assertEqual(transaction, expected_output)
 
@@ -669,8 +698,7 @@ class TestAccount(unittest.TestCase):
         self.account.deduct("main")
         expected_output = f"{self.date_string},main,deduction,1500,no_description,1500,0\n"
 
-        with open(self.account.get_transactions_file_name(), "r") as file:
-            transaction = file.readlines()[1]
+        transaction = AccountTransactionHandler._transactions[0]
 
         self.assertEqual(transaction, expected_output)
 
@@ -683,10 +711,8 @@ class TestAccount(unittest.TestCase):
         expected_output1 = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
         expected_output2 = f"{self.date_string},emergencies,deduction,300,another test transaction,500,200\n"
 
-        with open(self.account.get_transactions_file_name(), "r") as file:
-            transactions = file.readlines()
-            transaction1 = transactions[1]
-            transaction2 = transactions[2]
+        transaction1 = AccountTransactionHandler._transactions[0]
+        transaction2 = AccountTransactionHandler._transactions[1]
 
         self.assertEqual(transaction1, expected_output1)
         self.assertEqual(transaction2, expected_output2)
@@ -694,9 +720,8 @@ class TestAccount(unittest.TestCase):
     def test_deduct_records_transaction_invalid_wallet(self):
         """Deduct method records the transaction in the file"""
         self.account.deduct("invalid_wallet_name")
-        with open(self.account.get_transactions_file_name(), "r") as file:
-            with self.assertRaises(IndexError):
-                file.readlines()[1]
+        with self.assertRaises(IndexError):
+            AccountTransactionHandler._transactions[0]
 
     def test_get_transactions_file_name(self):
         self.assertEqual(self.account.get_transactions_file_name(), "test_transactions.csv")
@@ -706,7 +731,7 @@ if __name__ == '__main__':
     acc = Account("test_wallet.json")
     if (
         acc.get_wallet_name() == "test_wallet.json"
-        and TransactionHistory.transactions_filename == "test_transactions.csv"
+        and acc.get_transactions_file_name() == "test_transactions.csv"
     ):
         unittest.main(buffer=True)
     else:

@@ -2,8 +2,8 @@ from __future__ import annotations
 from typing import List, Tuple
 from Wallet import Wallet
 from datetime import datetime
-from Transaction import Transaction, TransactionType
-from TransactionHistory import TransactionHistory
+from Transaction import TransactionType
+from AccountTransactionHandler import AccountTransactionHandler
 import json
 import os
 
@@ -30,7 +30,7 @@ class Account():
         ]
 
         self.__init_wallets_file()
-        self.__init_transactions_file()
+        AccountTransactionHandler._init_transactions_file(self.get_transactions_file_name())
 
 
     def get_wallet_name(self) -> str:
@@ -65,17 +65,6 @@ class Account():
                 self.save()
                 print('Wallet created.')
 
-    def __init_transactions_file(self):
-        """
-        Make sure to create the transactions.csv file with its proper headers
-        if it doesn't exist
-        """
-
-        if not os.path.exists(self.get_transactions_file_name()):
-            headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
-            with open(self.get_transactions_file_name(), "w") as file:
-                file.write(headers)
-        
 
     def get_wallet(self, name: str) -> Wallet:
         """
@@ -217,6 +206,7 @@ class Account():
         wallets_json = json.dumps(wallets)
         with open(self.__wallet_name, 'w') as file:
             file.write(wallets_json)
+            AccountTransactionHandler._insert_queued_transactions(self.get_transactions_file_name())
             print('Saved Changes.')
 
     def deduct(self, name: str, description: str = None, amount: int = None):
@@ -249,7 +239,7 @@ class Account():
             balance_after = 0
             wallet.balance = 0
 
-        TransactionHistory.insert_new_transaction(
+        AccountTransactionHandler._queue_transaction(
             date,
             name,
             TransactionType.DEDUCTION.value,
@@ -508,6 +498,7 @@ class Account():
             wallet = Wallet(**wallet_dict)
             self.wallets.append(wallet)
 
+        AccountTransactionHandler._empty_queued_transactions()
         print("Account has been reset.")
 
     def set_cap(self, name: str, cap: int) -> None:
