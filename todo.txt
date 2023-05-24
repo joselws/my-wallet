@@ -11,3 +11,4 @@ show wallets by type
 multiple currencies
 
 TransactionHistory class
+Account: show queued entries
