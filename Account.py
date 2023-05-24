@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import List, Tuple
 from Wallet import Wallet
 from datetime import datetime
+from Transaction import TransactionType
+from AccountTransactionHandler import AccountTransactionHandler
 import json
 import os
 
@@ -12,9 +14,12 @@ class Account():
     all the wallets for an owner. 
     """
 
-    def __init__(self):
-        self.__wallet_name = "my_wallet.json"
-        self.__transactions_name = "transactions.csv"
+    def __init__(self, wallet_name: str = "my_wallet.json"):
+        self.__wallet_name = wallet_name
+        if wallet_name in ["test_wallet.json", "test_empty_wallet.json"]:
+            self.__transactions_name = "test_transactions.csv"
+        else:
+            self.__transactions_name = "transactions.csv"
         self.wallets: List[Wallet] = []
         self.savings_wallets: List[str] = [
             'emergencies',
@@ -25,7 +30,7 @@ class Account():
         ]
 
         self.__init_wallets_file()
-        self.__init_transactions_file()
+        AccountTransactionHandler._init_transactions_file(self.get_transactions_file_name())
 
 
     def get_wallet_name(self) -> str:
@@ -60,17 +65,6 @@ class Account():
                 self.save()
                 print('Wallet created.')
 
-    def __init_transactions_file(self):
-        """
-        Make sure to create the transactions.csv file with its proper headers
-        if it doesn't exist
-        """
-
-        if not os.path.exists(self.get_transactions_file_name()):
-            headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
-            with open(self.get_transactions_file_name(), "w") as file:
-                file.write(headers)
-        
 
     def get_wallet(self, name: str) -> Wallet:
         """
@@ -212,6 +206,7 @@ class Account():
         wallets_json = json.dumps(wallets)
         with open(self.__wallet_name, 'w') as file:
             file.write(wallets_json)
+            AccountTransactionHandler._insert_queued_transactions(self.get_transactions_file_name())
             print('Saved Changes.')
 
     def deduct(self, name: str, description: str = None, amount: int = None):
@@ -223,40 +218,36 @@ class Account():
         if not wallet:
             print('No wallet under that name could be found.')
             return
-        else:
-            if amount is not None:
-                if not self.valid_number(amount) or amount > wallet.balance:
-                    print('Error with the amount input, please try again.')
-                else:
-                    self._record_deduct_transaction(name, amount, description)
-                    print(f"Wallet balance changed from {wallet.balance} ", end="")
-                    wallet.balance -= amount
-                    print(f"to {wallet.balance}")
-            else:
-                print(f"Wallet {wallet.name} balance {wallet.balance} set to 0")
-                self._record_deduct_transaction(name, amount, description)
-                wallet.balance = 0
-
-    def _record_deduct_transaction(self, name: str, amount: int = None, description: str = None):
-        """
-        Records the deduct transaction in the transactions.csv file
-        """
-
+        
+        balance_before = wallet.balance
+        date = datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S")
         if not description:
             description = "no_description"
-        
-        date = datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S")
-        wallet = self.get_wallet(name)
-        balance_before = wallet.balance
-        transaction_type = "deduction"
-        if amount:
-            balance_after = balance_before - amount
-        else:
-            amount = balance_before
-            balance_after = 0
 
-        with open(self.get_transactions_file_name(), "a") as file:
-            file.write(f"{date},{name},{transaction_type},{amount},{description},{balance_before},{balance_after}\n")
+        if amount is not None:
+            if not self.valid_number(amount) or amount > wallet.balance:
+                print('Error with the amount input, please try again.')
+                return
+            else:
+                balance_after = wallet.balance - amount
+                print(f"Wallet balance changed from {wallet.balance} ", end="")
+                wallet.balance -= amount
+                print(f"to {wallet.balance}")
+        else:
+            print(f"Wallet {wallet.name} balance {wallet.balance} set to 0")
+            amount = wallet.balance
+            balance_after = 0
+            wallet.balance = 0
+
+        AccountTransactionHandler._queue_transaction(
+            date,
+            name,
+            TransactionType.DEDUCTION.value,
+            amount,
+            balance_before, 
+            balance_after,
+            description, 
+        )
 
     def percents(self) -> None:
         """Show existing percents of each wallet"""
@@ -507,6 +498,7 @@ class Account():
             wallet = Wallet(**wallet_dict)
             self.wallets.append(wallet)
 
+        AccountTransactionHandler._empty_queued_transactions()
         print("Account has been reset.")
 
     def set_cap(self, name: str, cap: int) -> None:
