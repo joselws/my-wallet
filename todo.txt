@@ -10,4 +10,12 @@ deposit() profile-brackets for customizing different deposit profiles according 
 show wallets by type
 multiple currencies
 
-TransactionHistory class
+TransactionHistory class: 
+    - Add id to Transactions
+        - Update operations
+        - Delete operations
+    - query transactions by wallet
+    - query transactions by date
+
+Account: 
+    - show queued entries
