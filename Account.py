@@ -30,7 +30,9 @@ class Account():
         ]
 
         self.__init_wallets_file()
-        AccountTransactionHandler._init_transactions_file(self.get_transactions_file_name())
+        AccountTransactionHandler._init_transactions_file(
+            self.get_transactions_file_name()
+        )
 
 
     def get_wallet_name(self) -> str:
@@ -453,7 +455,6 @@ class Account():
         
         return f"${total}" if total else None
 
-
     def summary(self) -> None:
         """Prints all relevant information about your account"""
 
@@ -472,6 +473,14 @@ class Account():
             print(f"cap: {wallet.cap}\n")
         else:
             print(f"Wallet {name} doesn't exist!")
+
+    @staticmethod
+    def show_queued_transactions() -> bool:
+        """
+        Show all queued transactions. 
+        Returns False if no transactions are queued
+        """
+        return AccountTransactionHandler._show_queued_transactions()
 
     def rename(self, wallet_name: str, new_name: str) -> None:
         """Renames a wallet"""
