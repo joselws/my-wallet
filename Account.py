@@ -14,7 +14,7 @@ class Account():
     all the wallets for an owner. 
     """
 
-    def __init__(self, wallet_name: str = "my_wallet.json"):
+    def __init__(self, wallet_name: str = "test_wallet.json"):
         self.__wallet_name = wallet_name
         if wallet_name in ["test_wallet.json", "test_empty_wallet.json"]:
             self.__transactions_name = "test_transactions.csv"
@@ -475,12 +475,9 @@ class Account():
             print(f"Wallet {name} doesn't exist!")
 
     @staticmethod
-    def show_queued_transactions() -> bool:
-        """
-        Show all queued transactions. 
-        Returns False if no transactions are queued
-        """
-        return AccountTransactionHandler._show_queued_transactions()
+    def show_queued_transactions() -> None:
+        """Show all queued transactions."""
+        AccountTransactionHandler._show_queued_transactions()
 
     def rename(self, wallet_name: str, new_name: str) -> None:
         """Renames a wallet"""

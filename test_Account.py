@@ -726,15 +726,6 @@ class TestAccount(unittest.TestCase):
     def test_get_transactions_file_name(self):
         self.assertEqual(self.account.get_transactions_file_name(), "test_transactions.csv")
 
-    def test_show_queued_transactions_no_transactions(self):
-        """Returns False if there are no queued transactions"""
-        self.assertFalse(self.account.show_queued_transactions())
-
-    def test_show_queued_transactions(self):
-        """Returns False if there are no queued transactions"""
-        self.account.deduct("main", "test deduction", 10)
-        self.assertTrue(self.account.show_queued_transactions())
-
 
 if __name__ == '__main__':
     acc = Account("test_wallet.json")
