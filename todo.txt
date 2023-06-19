@@ -18,4 +18,3 @@ TransactionHistory class:
     - query transactions by date
 
 Account: 
-    - show queued entries
