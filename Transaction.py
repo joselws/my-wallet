@@ -9,6 +9,10 @@ class TransactionType(Enum):
 
 @dataclass(frozen=True)
 class Transaction:
+    """
+    Each transaction represents a single entry from the transactions.csv file
+    """
+
     date: datetime
     wallet: str
     transaction_type: TransactionType.DEDUCTION
@@ -16,3 +20,6 @@ class Transaction:
     description: str
     balance_before: int
     balance_after: int
+
+    def __repr__(self) -> str:
+        return f"Transaction {self.wallet} ${self.amount} ({self.date}): {self.description}"
