@@ -12,10 +12,7 @@ multiple currencies
 
 
 TransactionHistory class: 
-    - Add id to Transactions
-        - Update operations
-        - Delete operations
-    - query transactions by wallet
-    - query transactions by date
+    - sort transactions by amount, wallet, and date
+    - add Reverse option for desc and asc order
 
 Account: 
