@@ -220,6 +220,10 @@ class Account():
         if not wallet:
             print('No wallet under that name could be found.')
             return
+
+        if not wallet.balance:
+            print("No available balance to deduct from.")
+            return
         
         balance_before = wallet.balance
         date = datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S")

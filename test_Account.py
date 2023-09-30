@@ -250,6 +250,12 @@ class TestAccount(unittest.TestCase):
         self.account.deduct('main', "test", 500)
         self.assertEqual(self.main.balance, 1000)
 
+    def test_empty_deduct_dont_generate_transaction(self):
+        """Deduct method correctly working"""
+        self.account.add_wallet('test')
+        self.account.deduct("test", "test invalid transaction")
+        self.assertEqual(len(AccountTransactionHandler._transactions), 0)
+
     def test_deduct_surpass_amount(self):
         """Cant deduct money that surpasses wallet balance"""
         self.account.deduct('charity', "test", 1000)
