@@ -15,3 +15,7 @@ TransactionHistory class:
     - add Reverse option for desc and asc order
 
 Account: 
+
+CSV:
+    - automatically add double quotes (") on string fields
+    - make double quotes in transactions.csv consistent on string fields
