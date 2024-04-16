@@ -230,7 +230,7 @@ class TestAccount(unittest.TestCase):
         mock_datetime.strftime.return_value = self.date_string
         # Save a new wallet to json file
         self.account.deduct('main', "test_deduct", 100)
-        entry = f"{self.date_string},main,deduction,100,test_deduct,1500,1400\n"
+        entry = f"{self.date_string},main,deduction,100,\"test_deduct\",1500,1400\n"
         self.assertEqual(len(AccountTransactionHandler._transactions), 1)
         self.assertEqual(AccountTransactionHandler._transactions[0], entry)
         
@@ -680,7 +680,7 @@ class TestAccount(unittest.TestCase):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime.return_value = self.date_string
         self.account.deduct("main", "test transaction", 500)
-        expected_output = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
+        expected_output = f'{self.date_string},main,deduction,500,"test transaction",1500,1000\n'
 
         transaction = AccountTransactionHandler._transactions[0]
 
@@ -691,7 +691,7 @@ class TestAccount(unittest.TestCase):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main", "test transaction")
-        expected_output = f"{self.date_string},main,deduction,1500,test transaction,1500,0\n"
+        expected_output = f"{self.date_string},main,deduction,1500,\"test transaction\",1500,0\n"
 
         transaction = AccountTransactionHandler._transactions[0]
 
@@ -702,7 +702,7 @@ class TestAccount(unittest.TestCase):
         """Deduct method records the transaction in the file"""
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main")
-        expected_output = f"{self.date_string},main,deduction,1500,no_description,1500,0\n"
+        expected_output = f"{self.date_string},main,deduction,1500,\"no_description\",1500,0\n"
 
         transaction = AccountTransactionHandler._transactions[0]
 
@@ -714,8 +714,8 @@ class TestAccount(unittest.TestCase):
         mock_datetime.strftime = Mock(return_value=self.date_string)
         self.account.deduct("main", "test transaction", 500)
         self.account.deduct("emergencies", "another test transaction", 300)
-        expected_output1 = f"{self.date_string},main,deduction,500,test transaction,1500,1000\n"
-        expected_output2 = f"{self.date_string},emergencies,deduction,300,another test transaction,500,200\n"
+        expected_output1 = f"{self.date_string},main,deduction,500,\"test transaction\",1500,1000\n"
+        expected_output2 = f"{self.date_string},emergencies,deduction,300,\"another test transaction\",500,200\n"
 
         transaction1 = AccountTransactionHandler._transactions[0]
         transaction2 = AccountTransactionHandler._transactions[1]

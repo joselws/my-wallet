@@ -252,7 +252,7 @@ class Account():
             amount,
             balance_before, 
             balance_after,
-            description, 
+            f'"{description}"', 
         )
 
     def percents(self) -> None:

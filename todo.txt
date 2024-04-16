@@ -17,5 +17,4 @@ TransactionHistory class:
 Account: 
 
 CSV:
-    - automatically add double quotes (") on string fields
     - make double quotes in transactions.csv consistent on string fields
