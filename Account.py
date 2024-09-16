@@ -267,11 +267,10 @@ class Account():
 
         print("Showing current wallet percentages")
         for wallet in self.wallets:
-            if wallet.name != 'main':
-                print(f'Wallet {wallet.name}: {wallet.percent}%')
+            print(f'Wallet {wallet.name}: {wallet.percent}%')
         print('')   # newline
 
-        wallets = [wallet.name for wallet in self.wallets if wallet.name != 'main']
+        wallets = [wallet.name for wallet in self.wallets]
         wallets_dict = {}
 
         for wallet in wallets:
@@ -294,10 +293,7 @@ class Account():
         """Calculates the main wallet percent and set all percents on wallets"""
         
         percents_sum = sum([percent for percent in percents.values()])
-        if percents_sum <= 100:
-            main = self.get_wallet('main')
-            main.percent = 100 - percents_sum
-
+        if percents_sum == 100:
             for name, percent in percents.items():
                 self.get_wallet(name).percent = percent
 

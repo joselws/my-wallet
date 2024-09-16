@@ -359,9 +359,9 @@ class TestAccount(unittest.TestCase):
         acc.reset()
         self.assertEqual(len(AccountTransactionHandler._transactions), 0)
 
-    def test_calc_percents_main_percent(self):
-        """The main percent is correctly calculated"""
-        percents = {'emergencies': 30, "charity": 20}
+    def test_calc_percents_valid_1(self):
+        """The calc_percents work correctly under valid situations"""
+        percents = {'emergencies': 30, "charity": 20, "main": 50}
         self.account.calc_percents(percents)
         self.assertTrue(self.account.correct_percent())
         self.assertEqual(self.main.percent, 50)
@@ -369,9 +369,9 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(self.charity.percent, 20)
         self.assertEqual(len(self.account), 3)
 
-    def test_calc_percents_main_no_change(self):
-        """Main doesn't change its percent if the sum is already 100"""
-        percents = {'emergencies': 60, "charity": 40}
+    def test_calc_percents_valid_2(self):
+        """The calc_percents work correctly under valid situations"""
+        percents = {'emergencies': 60, "charity": 40, "main": 0}
         self.account.calc_percents(percents)
         self.assertTrue(self.account.correct_percent())
         self.assertEqual(self.main.percent, 0)
@@ -381,7 +381,7 @@ class TestAccount(unittest.TestCase):
 
     def test_calc_percents_invalid(self):
         """Operation invalid if percents surpass 100"""
-        percents = {'emergencies': 60, "charity": 60}
+        percents = {'emergencies': 60, "charity": 60, "main": 30}
         self.account.calc_percents(percents)
         self.assertTrue(self.account.correct_percent())
         self.assertEqual(self.main.percent, 70)
