@@ -124,7 +124,7 @@ class TransactionHistory:
         self.queried_transactions.extend(filtered_transactions)
         self.show_queried_transactions()
         self.show_aggregated_transactions()
-        print(f"Total transaction amount: {self.queried_balance()}")
+        print(f"\nTotal transaction amount: {self.queried_balance()}")
         print(f"Number of transactions: {len(self.queried_transactions)}")
         return True
 
@@ -159,5 +159,6 @@ class TransactionHistory:
             wallet_statistics[transaction.wallet]["total"] += transaction.amount
             wallet_statistics[transaction.wallet]["transactions"] += 1
         
+        print("\nAggregated transactions:")
         for wallet, stats in wallet_statistics.items():
             print(f"{wallet}: ${stats['total']} ({stats['transactions']} transactions)")
