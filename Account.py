@@ -6,6 +6,7 @@ from Transaction import TransactionType
 from AccountTransactionHandler import AccountTransactionHandler
 import json
 import os
+import shutil
 
 
 class Account():
@@ -575,19 +576,19 @@ class Account():
     
     def backup(self):
         """Creates a backup of the current state of the account"""
-        backup_wallet_name = self.__wallet_name.replace(".json", "_backup.json")
-        with open(self.__wallet_name, "r") as file:
-            wallets_data = file.read()
-        with open(f"backup/{backup_wallet_name}", "w") as file:
-            file.write(wallets_data)
-        print(f"Wallet backup created at backup/{backup_wallet_name}")
+        wallet_exists = os.path.exists(self.__wallet_name)
+        transactions_exists = os.path.exists(self.__transactions_name)
+        if not wallet_exists or not transactions_exists:
+            print(f"Error. One of the files {self.__wallet_name} or {self.__transactions_name} was not found.")
+            return
+        if not os.path.exists("backup"):
+            os.mkdir("backup")
 
+        backup_wallet_name = self.__wallet_name.replace(".json", "_backup.json")
         backup_transactions_name = self.__transactions_name.replace(".csv", "_backup.csv")
-        with open(self.__transactions_name, "r") as file:
-            transactions_data = file.read()
-        with open(f"backup/{backup_transactions_name}", "w") as file:
-            file.write(transactions_data)
-        print(f"Transactions backup created at backup/{backup_transactions_name}")
+        shutil.copy(self.__wallet_name, os.path.join("backup", backup_wallet_name))
+        shutil.copy(self.__transactions_name, os.path.join("backup", backup_transactions_name))
+        print(f"Backup of {self.__wallet_name} and {self.__transactions_name} created at ./backup/")
 
     def __repr__(self) -> str:
         return f'Account: {[wallet.name for wallet in self.wallets]}'
