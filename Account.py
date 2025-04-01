@@ -580,14 +580,14 @@ class Account():
             wallets_data = file.read()
         with open(f"backup/{backup_wallet_name}", "w") as file:
             file.write(wallets_data)
-        print(f"Wallet backup created at {backup_wallet_name}")
+        print(f"Wallet backup created at backup/{backup_wallet_name}")
 
         backup_transactions_name = self.__transactions_name.replace(".csv", "_backup.csv")
         with open(self.__transactions_name, "r") as file:
             transactions_data = file.read()
         with open(f"backup/{backup_transactions_name}", "w") as file:
             file.write(transactions_data)
-        print(f"Transactions backup created at {backup_transactions_name}")
+        print(f"Transactions backup created at backup/{backup_transactions_name}")
 
     def __repr__(self) -> str:
         return f'Account: {[wallet.name for wallet in self.wallets]}'
