@@ -5,6 +5,7 @@ from unittest.mock import patch, Mock
 from Account import Account
 from AccountTransactionHandler import AccountTransactionHandler
 from Wallet import Wallet
+import json
 
 
 class TestAccount(unittest.TestCase):
@@ -16,6 +17,14 @@ class TestAccount(unittest.TestCase):
     date_string = "12-06-1995 00:00:00"
 
     def setUp(self):
+        test_wallet_data = [
+            {"name": "main", "percent": 70, "balance": 1500, "cap": 0}, 
+            {"name": "emergencies", "percent": 20, "balance": 500, "cap": 50000}, 
+            {"name": "charity", "percent": 10, "balance": 200, "cap": 0}
+        ]
+        with open("test_wallet.json", "w") as file:
+            file.write(json.dumps(test_wallet_data))
+
         self.account = Account("test_wallet.json")
         self.main = self.account.get_wallet('main')
         self.emergencies = self.account.get_wallet('emergencies')
@@ -26,6 +35,13 @@ class TestAccount(unittest.TestCase):
         with open(self.account.get_transactions_file_name(), "w") as file:
             transaction_headers = "date,wallet,transaction_type,amount,description,balance_before,balance_after\n"
             file.write(transaction_headers)
+    
+    def tearDown(self):
+        """Remove the test wallet and transactions file backups"""
+        if os.path.exists("backup/test_wallet_backup.json"):
+            os.remove("backup/test_wallet_backup.json")
+        if os.path.exists("backup/test_transactions_backup.csv"):
+            os.remove("backup/test_transactions_backup.csv")
 
     def test_account_correctly_created(self):
         """Test that the account was correctly created"""
@@ -731,6 +747,29 @@ class TestAccount(unittest.TestCase):
 
     def test_get_transactions_file_name(self):
         self.assertEqual(self.account.get_transactions_file_name(), "test_transactions.csv")
+
+    def test_backup_method(self):
+        """Backup method creates a copy of the wallet file"""
+        self.account.deduct('main', "test", 500)
+        self.account.save()
+        self.assertFalse(os.path.exists("backup/test_wallet_backup.json"))
+        self.assertFalse(os.path.exists("backup/test_transactions_backup.csv"))
+        
+        self.account.backup()
+        self.assertTrue(os.path.exists("backup/test_wallet_backup.json"))
+        self.assertTrue(os.path.exists("backup/test_transactions_backup.csv"))
+        
+        with open("backup/test_wallet_backup.json", "r") as file:
+            backup_data = file.read()
+        with open("test_wallet.json", "r") as file:
+            original_data = file.read()
+        self.assertEqual(backup_data, original_data)
+
+        with open("backup/test_transactions_backup.csv", "r") as file:
+            backup_transactions_data = file.read()
+        with open("test_transactions.csv", "r") as file:
+            original_transactions_data = file.read()
+        self.assertEqual(backup_transactions_data, original_transactions_data)
 
 
 if __name__ == '__main__':

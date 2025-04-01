@@ -3,3 +3,4 @@ my_wallet.json
 transactions.csv
 __pycache__/*
 .mypy_cache/*
+backup/*
