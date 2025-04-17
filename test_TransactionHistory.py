@@ -129,6 +129,36 @@ class TestTransactionHistory(unittest.TestCase):
         self.assertEqual(transaction.balance_before, 200)
         self.assertEqual(transaction.balance_after, 150)
 
+    def test_get_start_of_week_thursday(self) -> None:
+        """Get the start of the week for a given date"""
+        date = datetime(year=2025, month=4, day=17)
+        start_of_week = self.th.get_start_of_week(date)
+        self.assertEqual(start_of_week.day, 14)
+
+    def test_get_start_of_week_monday(self) -> None:
+        """Get the start of the week for a given date"""
+        date = datetime(year=2025, month=4, day=14)
+        start_of_week = self.th.get_start_of_week(date)
+        self.assertEqual(start_of_week.day, 14)
+
+    def test_get_start_of_week_sunday(self) -> None:
+        """Get the start of the week for a given date"""
+        date = datetime(year=2025, month=4, day=20)
+        start_of_week = self.th.get_start_of_week(date)
+        self.assertEqual(start_of_week.day, 14)
+
+    def test_get_start_of_month(self) -> None:
+        """Get the start of the month for a given date"""
+        date = datetime(year=2025, month=4, day=17)
+        start_of_month = self.th.get_start_of_month(date)
+        self.assertEqual(start_of_month.day, 1)
+
+    def test_get_start_of_month_beginning(self) -> None:
+        """Get the start of the month for a given date"""
+        date = datetime(year=2025, month=4, day=1)
+        start_of_month = self.th.get_start_of_month(date)
+        self.assertEqual(start_of_month.day, 1)
+
 
 if __name__ == '__main__':
     if TransactionHistory(TEST_TRANSACTIONS_FILENAME).filename == "test_transactions.csv":

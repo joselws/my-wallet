@@ -1,5 +1,5 @@
-from datetime import datetime
-from Transaction import Transaction, TransactionType
+from datetime import datetime, timedelta
+from Transaction import Transaction
 import csv
 
 
@@ -11,7 +11,7 @@ class TransactionHistory:
         You can provide either the name of the transactions filename
         or use acc.get_transactions_filename()
         """
-        self.transactions = []
+        self.transactions: list[Transaction] = []
         self.queried_transactions = []
         self.date_format = "%d-%m-%Y %H:%M:%S"
         self.headers = [
@@ -162,3 +162,48 @@ class TransactionHistory:
         print("\nAggregated transactions:")
         for wallet, stats in wallet_statistics.items():
             print(f"{wallet}: ${stats['total']} ({stats['transactions']} transactions)")
+
+    def current_stats(self) -> None:
+        """
+        Print the daily, weekly, and monthly expenses
+        """
+        now = datetime.now()
+        start_of_week = self.get_start_of_week(now)
+        start_of_month = self.get_start_of_month(now)
+
+        if self.load_transactions() != 0:
+            print("Error loading transactions")
+            return
+        
+        daily_transactions: list[Transaction] = []
+        weekly_transactions: list[Transaction] = []
+        monthly_transactions: list[Transaction] = []
+
+        for transaction in self.transactions:
+            if transaction.date.date() == now.date():
+                daily_transactions.append(transaction)
+            if transaction.date.date() >= start_of_week.date():
+                weekly_transactions.append(transaction)
+            if transaction.date.date() >= start_of_month.date():
+                monthly_transactions.append(transaction)
+
+        daily_total = sum(transaction.amount for transaction in daily_transactions)
+        weekly_total = sum(transaction.amount for transaction in weekly_transactions)
+        monthly_total = sum(transaction.amount for transaction in monthly_transactions)
+        print(f"Daily total: ${daily_total} ({len(daily_transactions)} transactions)")
+        print(f"Weekly total: ${weekly_total} ({len(weekly_transactions)} transactions)")
+        print(f"Monthly total: ${monthly_total} ({len(monthly_transactions)} transactions)")
+
+
+    def get_start_of_week(self, date: datetime) -> datetime:
+        """
+        Get the start of the week for a given date
+        """
+        return date - timedelta(days=date.weekday())
+    
+    def get_start_of_month(self, date: datetime) -> datetime:
+        """
+        Get the start of the month for a given date
+        """
+        return date.replace(day=1)
+    
