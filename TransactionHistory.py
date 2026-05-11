@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import calendar
 from Transaction import Transaction
 import csv
 
@@ -212,4 +213,11 @@ class TransactionHistory:
         Get the start of the month for a given date
         """
         return date.replace(day=1)
+
+    def get_end_of_month(self, date: datetime) -> datetime:
+        """
+        Get the end of the month for a given date
+        """
+        last_day = calendar.monthrange(date.year, date.month)[1]
+        return date.replace(day=last_day)
     

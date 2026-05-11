@@ -177,6 +177,36 @@ class TestTransactionHistory(unittest.TestCase):
         start_of_month = self.th.get_start_of_month(date)
         self.assertEqual(start_of_month.day, 1)
 
+    def test_get_end_of_month(self) -> None:
+        """Get the last day of the month for a mid-month date"""
+        date = datetime(year=2025, month=4, day=17)
+        end_of_month = self.th.get_end_of_month(date)
+        self.assertEqual(end_of_month.day, 30)
+
+    def test_get_end_of_month_last_day(self) -> None:
+        """Get the last day of the month when already on the last day"""
+        date = datetime(year=2025, month=4, day=30)
+        end_of_month = self.th.get_end_of_month(date)
+        self.assertEqual(end_of_month.day, 30)
+
+    def test_get_end_of_month_may(self) -> None:
+        """Get the last day of a 31-day month"""
+        date = datetime(year=2025, month=5, day=14)
+        end_of_month = self.th.get_end_of_month(date)
+        self.assertEqual(end_of_month.day, 31)
+
+    def test_get_end_of_month_february_non_leap(self) -> None:
+        """Get the last day of February in a non-leap year"""
+        date = datetime(year=2023, month=2, day=10)
+        end_of_month = self.th.get_end_of_month(date)
+        self.assertEqual(end_of_month.day, 28)
+
+    def test_get_end_of_month_february_leap(self) -> None:
+        """Get the last day of February in a leap year"""
+        date = datetime(year=2024, month=2, day=10)
+        end_of_month = self.th.get_end_of_month(date)
+        self.assertEqual(end_of_month.day, 29)
+
 
 if __name__ == '__main__':
     if TransactionHistory(TEST_TRANSACTIONS_FILENAME).filename == "test_transactions.csv":
