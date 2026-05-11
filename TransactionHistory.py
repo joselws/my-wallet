@@ -195,6 +195,30 @@ class TransactionHistory:
         print(f"Weekly total: ${weekly_total} ({len(weekly_transactions)} transactions)")
         print(f"Monthly total: ${monthly_total} ({len(monthly_transactions)} transactions)")
 
+    def today(self) -> None:
+        """
+        Print today's transactions
+        """
+        today = datetime.now().date().strftime("%d-%m-%Y")
+        self.query(from_date=today, to_date=today)
+
+    def week(self) -> None:
+        """
+        Print this week's transactions
+        """
+        now = datetime.now()
+        start_of_week = self.get_start_of_week(now).date().strftime("%d-%m-%Y")
+        end_of_week = self.get_end_of_week(now).date().strftime("%d-%m-%Y")
+        self.query(from_date=start_of_week, to_date=end_of_week)
+
+    def month(self) -> None:
+        """
+        Print this month's transactions
+        """
+        now = datetime.now()
+        start_of_month = self.get_start_of_month(now).date().strftime("%d-%m-%Y")
+        end_of_month = self.get_end_of_month(now).date().strftime("%d-%m-%Y")
+        self.query(from_date=start_of_month, to_date=end_of_month)
 
     def get_start_of_week(self, date: datetime) -> datetime:
         """
