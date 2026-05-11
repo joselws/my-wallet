@@ -201,6 +201,12 @@ class TransactionHistory:
         """
         return date - timedelta(days=date.weekday())
     
+    def get_end_of_week(self, date: datetime) -> datetime:
+        """
+        Get the end of the week (Sunday) for a given date
+        """
+        return date + timedelta(days=6 - date.weekday())
+
     def get_start_of_month(self, date: datetime) -> datetime:
         """
         Get the start of the month for a given date

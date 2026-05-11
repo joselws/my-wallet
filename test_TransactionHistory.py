@@ -147,6 +147,24 @@ class TestTransactionHistory(unittest.TestCase):
         start_of_week = self.th.get_start_of_week(date)
         self.assertEqual(start_of_week.day, 14)
 
+    def test_get_end_of_week_thursday(self) -> None:
+        """Get the end of the week (Sunday) for a mid-week date"""
+        date = datetime(year=2025, month=4, day=17)
+        end_of_week = self.th.get_end_of_week(date)
+        self.assertEqual(end_of_week.day, 20)
+
+    def test_get_end_of_week_monday(self) -> None:
+        """Get the end of the week (Sunday) when given the first day of the week"""
+        date = datetime(year=2025, month=4, day=14)
+        end_of_week = self.th.get_end_of_week(date)
+        self.assertEqual(end_of_week.day, 20)
+
+    def test_get_end_of_week_sunday(self) -> None:
+        """Get the end of the week (Sunday) when the date is already Sunday"""
+        date = datetime(year=2025, month=4, day=20)
+        end_of_week = self.th.get_end_of_week(date)
+        self.assertEqual(end_of_week.day, 20)
+
     def test_get_start_of_month(self) -> None:
         """Get the start of the month for a given date"""
         date = datetime(year=2025, month=4, day=17)
